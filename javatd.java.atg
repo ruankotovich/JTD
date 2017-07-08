@@ -7,7 +7,7 @@ class KlassBuilder {
   public Map<String, Klass> klassMap = new HashMap<>();
 
   public static enum RelationType {
-    ASSOCIATION, DASSOCIATION, AGGREGATION, DAGGREGATION, DECOMPOSITION, DDECOMPOSITION, DEPENDENCY, DDEPENDENCY
+    ASSOCIATION, DASSOCIATION, AGGREGATION, DAGGREGATION, COMPOSITION, DCOMPOSITION, DEPENDENCY, DDEPENDENCY
   }
 
   public static enum AccessModifyer {
@@ -127,12 +127,14 @@ CHARACTERS
 lowerletter = 'a'..'z'.
 upperletter = 'A'..'Z'.
 numberchar = '0'..'9'.
+anys = ANY - '"'.
 
 TOKENS
 
 lowerword_c = lowerletter{upperletter|lowerletter}.
 upperword_c = upperletter{upperletter|lowerletter}.
 number_c = numberchar{numberchar}.
+literal_c = "\"" anys{anys} "\"".
 
 COMMENTS FROM "/*" TO "*/"
 
@@ -167,7 +169,7 @@ VoidType = "void".
 ClassName = UpperName.
 EntityName = (UpperName|LowerName).
 ArrayOperator = "[" [Number] "]".
-Relation = RelationType<out KlassBuilder.RelationType type> "@" Multiplicity "to" Multiplicity.
+Relation = RelationType<out KlassBuilder.RelationType type> ["@" Multiplicity "to" Multiplicity] [Title].
 
 // Generic Rules
 Modifyers <out KlassBuilder.Modifyers modifyer_out> (. modifyer_out = new KlassBuilder.Modifyers(); .) =
@@ -177,6 +179,8 @@ AccessModifyer<out KlassBuilder.AccessModifyer modifyer> (. modifyer_out.access 
 UpperName = upperword_c.
 LowerName = lowerword_c.
 Number = number_c.
+Multiplicity = literal_c.
+Title = "title" literal_c.
 
 AccessModifyer<out KlassBuilder.AccessModifyer modifyer_out> (. modifyer_out = null; .) =
 "public" (. modifyer_out = KlassBuilder.AccessModifyer.PUBLIC; .)
@@ -190,8 +194,8 @@ RelationType<out KlassBuilder.RelationType type_out> (. type_out = null; .) =
 |"dassociation"(. type_out = KlassBuilder.RelationType.DASSOCIATION; .)
 |"aggregation"(. type_out = KlassBuilder.RelationType.AGGREGATION; .)
 |"daggregation"(. type_out = KlassBuilder.RelationType.DAGGREGATION; .)
-|"decomposition"(. type_out = KlassBuilder.RelationType.DECOMPOSITION; .)
-|"ddecomposition"(. type_out = KlassBuilder.RelationType.DDECOMPOSITION; .)
+|"composition"(. type_out = KlassBuilder.RelationType.COMPOSITION; .)
+|"dcomposition"(. type_out = KlassBuilder.RelationType.DCOMPOSITION; .)
 |"dependency"(. type_out = KlassBuilder.RelationType.DEPENDENCY; .)
 |"ddependency"(. type_out = KlassBuilder.RelationType.DDEPENDENCY; .).
 
