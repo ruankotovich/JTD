@@ -1,0 +1,27 @@
+/*
+ * Inferring relationships
+ */
+
+class Room {}
+
+class House {
+    Room[] rooms association @ "1" to "  1..*" title " has";
+    /* dependency should not be shown if classes are already 
+       strongerly associated with each other */ 
+    Room largerRoom() {}
+}
+
+class Dog {
+    /* should infer dassociation @ "" to "1" (to Dog) */
+    Person owner;
+}
+
+class Person {
+    /* should infer dassociation @ "" to "0..*" (to House) */
+    House[] houses;
+    /* should infer dassociation @ "" to "0..*" (to Dog) */
+    Dog[] dogs;
+    
+    /* should infer ddependency @ "" to "" (to Room) */
+    public Room[] getFavRooms(House h) {}
+}

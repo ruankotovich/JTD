@@ -1,0 +1,29 @@
+/*
+* Advanced relationships
+* UML User Guide p. 137
+*/
+
+class Controller {}
+class EmbeddedAgent {}
+class PowerManager {}
+
+interface URLStreamHandler {
+Koero OpenConnection();
+void parseURL();
+void setURL();
+void toExternalForm();
+}
+
+class  SetTopController extends Controller, EmbeddedAgent
+implements URLStreamHandler {
+int authorizationLevel;
+PowerManager pm dassociation;
+
+void startUp() {}
+void shutDown() {}
+void connect() {}
+}
+
+class ChannelIterator {
+SetTopController sc dependency title "friend";
+}

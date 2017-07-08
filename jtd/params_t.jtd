@@ -1,0 +1,11 @@
+/*
+ * Class using methods with parameters
+ */
+
+class ActionQueue {
+        void add(Action a) {};
+        void add(Action a, int n) {};
+        void remove(int n) {};
+        int length() {};
+        void reorder() {};
+}

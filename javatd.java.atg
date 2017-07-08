@@ -1,0 +1,148 @@
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+class ClassBuilder{
+
+  Map<String, Klass> klassMap = new HashMap<>();
+
+  enum AccessModifyer{
+    PUBLIC("+"),
+    PRIVATE("-"),
+    PROTECTED("#"),
+    DEFAULT("");
+
+    private String nType;
+
+    AccessModifyer(String type){
+      this.nType=type;
+    }
+
+    public String getType(){
+      return this.nType;
+    }
+  }
+
+  class Klass{
+    public ArrayList<Attribute> attributesL;
+    public ArrayList<Method> methodsL;
+    public ArrayList<String> extendsL; //key for the KlassMap
+    public ArrayList<String> implementsL; //key for the KlassMap
+    public String name;
+
+    public Klass(String n){
+      this.name = n;
+    }
+
+    public void addAttribute(Attribute a){
+      this.attributesL.add(a);
+    }
+
+    public void addMethod(Method m){
+      this.methodsL.add(m);
+    }
+
+    public void addExtends(String klassKey){
+      this.extendsL.add(klassKey);
+    }
+
+    public void addImplements(String klassKey){
+      this.implementsL.add(klassKey);
+    }
+  }
+
+  class Paramether{
+    public String name;
+    public String type;
+
+    Paramether(String n, String t){
+      this.name = n;
+      this.type = t;
+    }
+  }
+
+  class Method{
+    public String name;
+    public String returnType;
+    public AccessModifyer modifyer;
+    public boolean isStatic;
+    public ArrayList<Paramether> paramethers;
+
+    void addParamether(Paramether p){
+      paramethers.add(p);
+    }
+
+    Method(String n, String r, AccessModifyer m, boolean s){
+      this.name = n;
+      this.returnType = r;
+      this.modifyer = m;
+      this.isStatic = s;
+    }
+  }
+
+  class Attribute{
+    public String name;
+    public String returnType;
+    public AccessModifyer modifyer;
+    public boolean isStatic;
+
+    Attribute(String n, String r, AccessModifyer m, boolean s){
+      this.name = n;
+      this.returnType = r;
+      this.modifyer = m;
+      this.isStatic = s;
+    }
+  }
+}
+
+COMPILER JTD2DOT
+
+ClassBuilder builder = new ClassBuilder();
+
+CHARACTERS
+
+lowerletter = 'a'..'z'.
+upperletter = 'A'..'Z'.
+
+TOKENS
+
+lowerword_c = lowerletter{upperletter|lowerletter}.
+upperword_c = upperletter{upperletter|lowerletter}.
+
+COMMENTS FROM "/*" TO "*/"
+
+IGNORE '\n'+'\t'
+
+PRODUCTIONS
+
+JTD2DOT = Definition{Definition}.
+
+Definition = ClassDefinition | InterfaceDefinition.
+ClassDefinition = "class" ClassName (. ClassBuilder.Klass clazz = builder.klassMap.put(t.val, null); .) ["extends" ClassName{"," ClassName}] ["implements" ClassName{"," ClassName}]"{" {ClassEntity} "}".
+InterfaceDefinition = "interface" ClassName ["extends" ClassName]"{" {InterfaceEntity} "}".
+
+ClassEntity = [Modifyers] Especializer.
+InterfaceEntity = [Modifyers] (CanonicalType|VoidType) EntityName MethodInterfaceCompletition.
+
+Especializer = FunctionEspecializer | AnomalousEspecializer.
+FunctionEspecializer = VoidType EntityName MethodCompletition.
+AnomalousEspecializer = CanonicalType EntityName (MethodCompletition | AttributeCompletition).
+
+MethodInterfaceCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" ";".
+MethodCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" "{" "}" [";"].
+AttributeCompletition = ";".
+
+CanonicalType = UpperName | LowerName.
+ClassName = UpperName.
+EntityName = (UpperName|LowerName).
+
+// Generic Rules
+Modifyers = AccessModifyer[ScopeModifyer] | ScopeModifyer[AccessModifyer].
+UpperName = upperword_c.
+LowerName = lowerword_c.
+AccessModifyer = "public" | "protected" | "private".
+ScopeModifyer = "static".
+VoidType = "void".
+
+END JTD2DOT.

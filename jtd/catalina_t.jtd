@@ -1,0 +1,25 @@
+/*
+ * Interface and generalization relationships in Jakarta Catalina
+ * (without abstract classes)
+ */
+
+class HttpResponseBase
+        extends ResponseBase
+        implements HttpResponse, HttpServletResponse {}
+
+class HttpResponseWrapper
+        extends ResponseWrapper
+        implements HttpResponse {}
+
+class HttpResponseFacade
+        extends ResponseFacade
+        implements HttpServletResponse {}
+
+class ResponseWrapper implements Response {}
+interface HttpResponse extends Response {}
+class ResponseBase implements Response, ServletResponse {}
+interface HttpServletResponse {}
+class ResponseFacade implements ServletResponse {}
+
+interface ServletResponse {}
+interface Response {}

@@ -1,0 +1,22 @@
+/*
+* Generalisation
+* UML User Guide p. 141
+*/
+
+/* Basic categorisations */
+class Asset {}
+class InterestBearingItem {}
+class InsurableItem {}
+
+/* Asset types */
+class BankAccount extends Asset, InsurableItem, InterestBearingItem {}
+class RealEstate extends Asset, InsurableItem {}
+class Security extends Asset {}
+
+/* Securities */
+class Stock extends Security {}
+class Bond extends Security {}
+
+/* Bank accounts */
+class CheckingAccount extends BankAccount {}
+class SavingsAccount extends BankAccount {}
