@@ -19,6 +19,7 @@ class KlassBuilder {
     private final String nType;
 
     AccessModifyer(String type) {
+
       this.nType = type;
     }
 
@@ -26,6 +27,16 @@ class KlassBuilder {
       return this.nType;
     }
   }
+
+  class Modifyers {
+    public boolean isStatic;
+    public AccessModifyer access;
+    Modifyers(){
+      isStatic = false;
+      access = KlassBuilder.AccessModifyer.DEFAULT;
+    }
+  }
+
 
   class Klass {
 
@@ -37,6 +48,9 @@ class KlassBuilder {
 
     public Klass(String n) {
       this.name = n;
+      methodsL = new ArrayList<>();
+      extendsL = new ArrayList<>();
+      implementsL = new ArrayList<>();
     }
 
     public void addAttribute(Attribute a) {
@@ -84,6 +98,7 @@ class KlassBuilder {
       this.returnType = r;
       this.modifyer = m;
       this.isStatic = s;
+      paramethers = new ArrayList<>();
     }
   }
 
@@ -152,9 +167,15 @@ EntityName = (UpperName|LowerName).
 
 // Generic Rules
 Modifyers = AccessModifyer[ScopeModifyer] | ScopeModifyer[AccessModifyer].
+
 UpperName = upperword_c.
 LowerName = lowerword_c.
-AccessModifyer = "public" | "protected" | "private".
+
+AccessModifyer =
+"public"
+|"protected"
+|"private".
+
 ScopeModifyer = "static".
 
 RelationType<out KlassBuilder.RelationType type> (. type = null; .) =
