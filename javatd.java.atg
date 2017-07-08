@@ -146,7 +146,12 @@ JTD2DOT = Definition{Definition}.
 
 // Definitions
 Definition = ClassDefinition | InterfaceDefinition.
-ClassDefinition = "class" ClassName (. KlassBuilder.Klass clazz = builder.klassMap.put(t.val, null); .) ["extends" ClassName{"," ClassName}] ["implements" ClassName{"," ClassName}]"{" {ClassEntity} "}".
+ClassDefinition =
+"class" ClassName (. KlassBuilder.Klass clazz = builder.klassMap.put(t.val, new KlassBuilder.Klass(t.val)); .)
+["extends" ClassName(. clazz.addExtends(t.val); .){"," ClassName(. clazz.addExtends(t.val); .)}]
+["implements" ClassName(. clazz.addExtends(t.val); .){"," ClassName(. clazz.addExtends(t.val); .)}]"{" {ClassEntity} "}".
+
+
 InterfaceDefinition = "interface" ClassName ["extends" ClassName]"{" {InterfaceEntity} "}".
 
 // Super Entities
