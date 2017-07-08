@@ -6,6 +6,10 @@ class KlassBuilder {
 
   public Map<String, Klass> klassMap = new HashMap<>();
 
+  public void printClasses(){
+    
+  }
+
   public static enum RelationType {
     ASSOCIATION, DASSOCIATION, AGGREGATION, DAGGREGATION, COMPOSITION, DCOMPOSITION, DEPENDENCY, DDEPENDENCY
   }
@@ -145,7 +149,7 @@ class KlassBuilder {
 
       PRODUCTIONS
 
-      JTD2DOT = Definition{Definition}.
+      JTD2DOT = Definition{Definition} (. builder.printClasses(); .).
 
       // Definitions
       Definition = ClassDefinition | InterfaceDefinition.
