@@ -1,79 +1,85 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class ClassBuilder{
+class KlassBuilder {
 
   Map<String, Klass> klassMap = new HashMap<>();
 
-  enum AccessModifyer{
+  public static enum RelationType {
+    ASSOCIATION, DASSOCIATION, AGGREGATION, DAGGREGATION, DECOMPOSITION, DDECOMPOSITION, DEPENDENCY, DDEPENDENCY
+  }
+
+  public static enum AccessModifyer {
     PUBLIC("+"),
     PRIVATE("-"),
     PROTECTED("#"),
     DEFAULT("");
 
-    private String nType;
+    private final String nType;
 
-    AccessModifyer(String type){
-      this.nType=type;
+    AccessModifyer(String type) {
+      this.nType = type;
     }
 
-    public String getType(){
+    public String getType() {
       return this.nType;
     }
   }
 
-  class Klass{
+  class Klass {
+
     public ArrayList<Attribute> attributesL;
     public ArrayList<Method> methodsL;
     public ArrayList<String> extendsL; //key for the KlassMap
     public ArrayList<String> implementsL; //key for the KlassMap
     public String name;
 
-    public Klass(String n){
+    public Klass(String n) {
       this.name = n;
     }
 
-    public void addAttribute(Attribute a){
+    public void addAttribute(Attribute a) {
       this.attributesL.add(a);
     }
 
-    public void addMethod(Method m){
+    public void addMethod(Method m) {
       this.methodsL.add(m);
     }
 
-    public void addExtends(String klassKey){
+    public void addExtends(String klassKey) {
       this.extendsL.add(klassKey);
     }
 
-    public void addImplements(String klassKey){
+    public void addImplements(String klassKey) {
       this.implementsL.add(klassKey);
     }
   }
 
-  class Paramether{
+  class Paramether {
+
     public String name;
     public String type;
 
-    Paramether(String n, String t){
+    Paramether(String n, String t) {
       this.name = n;
       this.type = t;
     }
   }
 
-  class Method{
+  class Method {
+
     public String name;
     public String returnType;
     public AccessModifyer modifyer;
     public boolean isStatic;
     public ArrayList<Paramether> paramethers;
 
-    void addParamether(Paramether p){
+    void addParamether(Paramether p) {
       paramethers.add(p);
     }
 
-    Method(String n, String r, AccessModifyer m, boolean s){
+    Method(String n, String r, AccessModifyer m, boolean s) {
       this.name = n;
       this.returnType = r;
       this.modifyer = m;
@@ -81,13 +87,14 @@ class ClassBuilder{
     }
   }
 
-  class Attribute{
+  class Attribute {
+
     public String name;
     public String returnType;
     public AccessModifyer modifyer;
     public boolean isStatic;
 
-    Attribute(String n, String r, AccessModifyer m, boolean s){
+    Attribute(String n, String r, AccessModifyer m, boolean s) {
       this.name = n;
       this.returnType = r;
       this.modifyer = m;
@@ -98,7 +105,7 @@ class ClassBuilder{
 
 COMPILER JTD2DOT
 
-ClassBuilder builder = new ClassBuilder();
+KlassBuilder builder = new KlassBuilder();
 
 CHARACTERS
 
@@ -118,22 +125,28 @@ PRODUCTIONS
 
 JTD2DOT = Definition{Definition}.
 
+// Definitions
 Definition = ClassDefinition | InterfaceDefinition.
-ClassDefinition = "class" ClassName (. ClassBuilder.Klass clazz = builder.klassMap.put(t.val, null); .) ["extends" ClassName{"," ClassName}] ["implements" ClassName{"," ClassName}]"{" {ClassEntity} "}".
+ClassDefinition = "class" ClassName (. KlassBuilder.Klass clazz = builder.klassMap.put(t.val, null); .) ["extends" ClassName{"," ClassName}] ["implements" ClassName{"," ClassName}]"{" {ClassEntity} "}".
 InterfaceDefinition = "interface" ClassName ["extends" ClassName]"{" {InterfaceEntity} "}".
 
+// Super Entities
 ClassEntity = [Modifyers] Especializer.
 InterfaceEntity = [Modifyers] (CanonicalType|VoidType) EntityName MethodInterfaceCompletition.
 
+// Especializers
 Especializer = FunctionEspecializer | AnomalousEspecializer.
 FunctionEspecializer = VoidType EntityName MethodCompletition.
 AnomalousEspecializer = CanonicalType EntityName (MethodCompletition | AttributeCompletition).
 
+// Methods and Attributes
 MethodInterfaceCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" ";".
 MethodCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" "{" "}" [";"].
 AttributeCompletition = ";".
 
+// Fetched Entities
 CanonicalType = UpperName | LowerName.
+VoidType = "void".
 ClassName = UpperName.
 EntityName = (UpperName|LowerName).
 
@@ -143,6 +156,16 @@ UpperName = upperword_c.
 LowerName = lowerword_c.
 AccessModifyer = "public" | "protected" | "private".
 ScopeModifyer = "static".
-VoidType = "void".
+
+RelationType<out KlassBuilder.RelationType type> (. type = null; .) =
+"association" (. type = KlassBuilder.RelationType.ASSOCIATION; .)
+|"dassociation"(. type = KlassBuilder.RelationType.DASSOCIATION; .)
+|"aggregation"(. type = KlassBuilder.RelationType.AGGREGATION; .)
+|"daggregation"(. type = KlassBuilder.RelationType.DAGGREGATION; .)
+|"decomposition"(. type = KlassBuilder.RelationType.DECOMPOSITION; .)
+|"ddecomposition"(. type = KlassBuilder.RelationType.DDECOMPOSITION; .)
+|"dependency"(. type = KlassBuilder.RelationType.DEPENDENCY; .)
+|"ddependency"(. type = KlassBuilder.RelationType.DDEPENDENCY; .).
+
 
 END JTD2DOT.
