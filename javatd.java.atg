@@ -4,7 +4,7 @@ import java.util.Map;
 
 class KlassBuilder {
 
-  Map<String, Klass> klassMap = new HashMap<>();
+  public Map<String, Klass> klassMap = new HashMap<>();
 
   public static enum RelationType {
     ASSOCIATION, DASSOCIATION, AGGREGATION, DAGGREGATION, DECOMPOSITION, DDECOMPOSITION, DEPENDENCY, DDEPENDENCY
@@ -148,7 +148,7 @@ ClassDefinition = "class" ClassName (. KlassBuilder.Klass clazz = builder.klassM
 InterfaceDefinition = "interface" ClassName ["extends" ClassName]"{" {InterfaceEntity} "}".
 
 // Super Entities
-ClassEntity = [Modifyers<out KlassBuilder.Modifyers modifyer>] Especializer.
+ClassEntity<> = [Modifyers<out KlassBuilder.Modifyers modifyer>] Especializer.
 InterfaceEntity = [Modifyers<out KlassBuilder.Modifyers modifyer>] (CanonicalType|VoidType) EntityName MethodInterfaceCompletition.
 
 // Especializers
@@ -159,18 +159,18 @@ AnomalousEspecializer = CanonicalType EntityName (MethodCompletition | Attribute
 // Methods and Attributes
 MethodInterfaceCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" ";".
 MethodCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" "{" "}" [";"].
-AttributeCompletition = Relation ";".
+AttributeCompletition = [Relation] ";".
 
 // Fetched Entities
-CanonicalType = (UpperName | LowerName) ArrayOperator.
+CanonicalType = (UpperName | LowerName) [ArrayOperator].
 VoidType = "void".
 ClassName = UpperName.
 EntityName = (UpperName|LowerName).
-ArrayOperator = "[" Number "]".
-Relation = RelationType<out KlassBuilder.RelationType type>.
+ArrayOperator = "[" [Number] "]".
+Relation = RelationType<out KlassBuilder.RelationType type> "@" Multiplicity "to" Multiplicity.
 
 // Generic Rules
-Modifyers <out KlassBuilder.Modifyers modifyer_out> (. modifyer_out = new KlassBuilder.Modifyers(); .)=
+Modifyers <out KlassBuilder.Modifyers modifyer_out> (. modifyer_out = new KlassBuilder.Modifyers(); .) =
 AccessModifyer<out KlassBuilder.AccessModifyer modifyer> (. modifyer_out.access = modifyer; .) [ScopeModifyer<out boolean isStatic> (. modifyer_out.isStatic = isStatic; .)]
 | ScopeModifyer<out boolean isStatic> (. modifyer_out.isStatic = isStatic; .) [ AccessModifyer<out KlassBuilder.AccessModifyer modifyer> (. modifyer_out.access = modifyer; .) ].
 
