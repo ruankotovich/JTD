@@ -28,17 +28,17 @@ class KlassBuilder {
     }
   }
 
-  class Modifyers {
+  public static class Modifyers {
     public boolean isStatic;
     public AccessModifyer access;
-    Modifyers(){
+    public Modifyers(){
       isStatic = false;
       access = KlassBuilder.AccessModifyer.DEFAULT;
     }
   }
 
 
-  class Klass {
+  public static class Klass {
 
     public ArrayList<Attribute> attributesL;
     public ArrayList<Method> methodsL;
@@ -70,18 +70,18 @@ class KlassBuilder {
     }
   }
 
-  class Paramether {
+  public static class Paramether {
 
     public String name;
     public String type;
 
-    Paramether(String n, String t) {
+    public Paramether(String n, String t) {
       this.name = n;
       this.type = t;
     }
   }
 
-  class Method {
+  public static class Method {
 
     public String name;
     public String returnType;
@@ -93,7 +93,7 @@ class KlassBuilder {
       paramethers.add(p);
     }
 
-    Method(String n, String r, AccessModifyer m, boolean s) {
+    public Method(String n, String r, AccessModifyer m, boolean s) {
       this.name = n;
       this.returnType = r;
       this.modifyer = m;
@@ -102,14 +102,14 @@ class KlassBuilder {
     }
   }
 
-  class Attribute {
+  public static class Attribute {
 
     public String name;
     public String returnType;
     public AccessModifyer modifyer;
     public boolean isStatic;
 
-    Attribute(String n, String r, AccessModifyer m, boolean s) {
+    public Attribute(String n, String r, AccessModifyer m, boolean s) {
       this.name = n;
       this.returnType = r;
       this.modifyer = m;
@@ -126,11 +126,13 @@ CHARACTERS
 
 lowerletter = 'a'..'z'.
 upperletter = 'A'..'Z'.
+numberchar = '0'..'9'.
 
 TOKENS
 
 lowerword_c = lowerletter{upperletter|lowerletter}.
 upperword_c = upperletter{upperletter|lowerletter}.
+number_c = numberchar{numberchar}.
 
 COMMENTS FROM "/*" TO "*/"
 
@@ -146,8 +148,8 @@ ClassDefinition = "class" ClassName (. KlassBuilder.Klass clazz = builder.klassM
 InterfaceDefinition = "interface" ClassName ["extends" ClassName]"{" {InterfaceEntity} "}".
 
 // Super Entities
-ClassEntity = [Modifyers] Especializer.
-InterfaceEntity = [Modifyers] (CanonicalType|VoidType) EntityName MethodInterfaceCompletition.
+ClassEntity = [Modifyers<out KlassBuilder.Modifyers modifyer>] Especializer.
+InterfaceEntity = [Modifyers<out KlassBuilder.Modifyers modifyer>] (CanonicalType|VoidType) EntityName MethodInterfaceCompletition.
 
 // Especializers
 Especializer = FunctionEspecializer | AnomalousEspecializer.
@@ -157,36 +159,41 @@ AnomalousEspecializer = CanonicalType EntityName (MethodCompletition | Attribute
 // Methods and Attributes
 MethodInterfaceCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" ";".
 MethodCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" "{" "}" [";"].
-AttributeCompletition = ";".
+AttributeCompletition = Relation ";".
 
 // Fetched Entities
-CanonicalType = UpperName | LowerName.
+CanonicalType = (UpperName | LowerName) ArrayOperator.
 VoidType = "void".
 ClassName = UpperName.
 EntityName = (UpperName|LowerName).
+ArrayOperator = "[" Number "]".
+Relation = RelationType<out KlassBuilder.RelationType type>.
 
 // Generic Rules
-Modifyers = AccessModifyer[ScopeModifyer] | ScopeModifyer[AccessModifyer].
+Modifyers <out KlassBuilder.Modifyers modifyer_out> (. modifyer_out = new KlassBuilder.Modifyers(); .)=
+AccessModifyer<out KlassBuilder.AccessModifyer modifyer> (. modifyer_out.access = modifyer; .) [ScopeModifyer<out boolean isStatic> (. modifyer_out.isStatic = isStatic; .)]
+| ScopeModifyer<out boolean isStatic> (. modifyer_out.isStatic = isStatic; .) [ AccessModifyer<out KlassBuilder.AccessModifyer modifyer> (. modifyer_out.access = modifyer; .) ].
 
 UpperName = upperword_c.
 LowerName = lowerword_c.
+Number = number_c.
 
-AccessModifyer =
-"public"
-|"protected"
-|"private".
+AccessModifyer<out KlassBuilder.AccessModifyer modifyer_out> (. modifyer_out = null; .) =
+"public" (. modifyer_out = KlassBuilder.AccessModifyer.PUBLIC; .)
+|"protected" (. modifyer_out = KlassBuilder.AccessModifyer.PROTECTED; .)
+|"private" (. modifyer_out = KlassBuilder.AccessModifyer.PRIVATE; .).
 
-ScopeModifyer = "static".
+ScopeModifyer<out boolean isStatic_out> = "static" (. isStatic_out = true; .).
 
-RelationType<out KlassBuilder.RelationType type> (. type = null; .) =
-"association" (. type = KlassBuilder.RelationType.ASSOCIATION; .)
-|"dassociation"(. type = KlassBuilder.RelationType.DASSOCIATION; .)
-|"aggregation"(. type = KlassBuilder.RelationType.AGGREGATION; .)
-|"daggregation"(. type = KlassBuilder.RelationType.DAGGREGATION; .)
-|"decomposition"(. type = KlassBuilder.RelationType.DECOMPOSITION; .)
-|"ddecomposition"(. type = KlassBuilder.RelationType.DDECOMPOSITION; .)
-|"dependency"(. type = KlassBuilder.RelationType.DEPENDENCY; .)
-|"ddependency"(. type = KlassBuilder.RelationType.DDEPENDENCY; .).
+RelationType<out KlassBuilder.RelationType type_out> (. type_out = null; .) =
+"association" (. type_out = KlassBuilder.RelationType.ASSOCIATION; .)
+|"dassociation"(. type_out = KlassBuilder.RelationType.DASSOCIATION; .)
+|"aggregation"(. type_out = KlassBuilder.RelationType.AGGREGATION; .)
+|"daggregation"(. type_out = KlassBuilder.RelationType.DAGGREGATION; .)
+|"decomposition"(. type_out = KlassBuilder.RelationType.DECOMPOSITION; .)
+|"ddecomposition"(. type_out = KlassBuilder.RelationType.DDECOMPOSITION; .)
+|"dependency"(. type_out = KlassBuilder.RelationType.DEPENDENCY; .)
+|"ddependency"(. type_out = KlassBuilder.RelationType.DDEPENDENCY; .).
 
 
 END JTD2DOT.
