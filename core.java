@@ -43,6 +43,10 @@ class KlassBuilder {
 
             if (from == null || to == null) {
                 throw new Error("Some of the builtin were not found : [" + from + " | " + to + "]");
+            } else if (to instanceof KlassBuilder.Klass && relation.relation.getType() == RelationType.REALIZATION) {
+                throw new Error("Cannot implement a class.");
+            } else if (to instanceof KlassBuilder.Klass && from instanceof KlassBuilder.Interfaze && (relation.relation.getType() == RelationType.GENERALIZATION || relation.relation.getType() == RelationType.REALIZATION)) {
+                throw new Error("Interface can neither implement a class nor extend a class.");
             }
 
             replaceIfMoreImportant(from, to, relation.relation);
@@ -326,34 +330,6 @@ class KlassBuilder {
             relationsWithClasses = new HashMap<>();
         }
 
-        public boolean addIfMoreImportantInterface(String clazz, KlassBuilder.Relation rel) {
-            KlassBuilder.Relation currentRelation = this.relationsWithInterfaces.put(clazz, rel);
-            if (currentRelation != null) {
-                if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
-                    this.relationsWithInterfaces.replace(clazz, rel);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        }
-
-        public boolean addIfMoreImportantClass(String clazz, KlassBuilder.Relation rel) {
-            KlassBuilder.Relation currentRelation = this.relationsWithClasses.put(clazz, rel);
-            if (currentRelation != null) {
-                if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
-                    this.relationsWithClasses.replace(clazz, rel);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        }
-
         public HashMap<String, Relation> getRelationsWithInterfaces() {
             return relationsWithInterfaces;
         }
@@ -528,34 +504,6 @@ class KlassBuilder {
                         }
                     }
                 }
-            }
-        }
-
-        public boolean addIfMoreImportantClass(String clazz, KlassBuilder.Relation rel) {
-            KlassBuilder.Relation currentRelation = this.relationsWithClasses.put(clazz, rel);
-            if (currentRelation != null) {
-                if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
-                    this.relationsWithClasses.replace(clazz, rel);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        }
-
-        public boolean addIfMoreImportantInterface(String clazz, KlassBuilder.Relation rel) {
-            KlassBuilder.Relation currentRelation = this.relationsWithInterfaces.put(clazz, rel);
-            if (currentRelation != null) {
-                if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
-                    this.relationsWithInterfaces.replace(clazz, rel);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
             }
         }
 
