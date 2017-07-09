@@ -29,7 +29,7 @@ class KlassBuilder {
     }
 
     public static boolean isCollection(String entity) {
-        return entity.contains("\\[");
+        return entity.contains("[");
     }
 
     public boolean replaceIfMoreImportant(Object from, Object to, KlassBuilder.Relation rel) {
@@ -207,7 +207,7 @@ class KlassBuilder {
         
         public String toStringUml() {
         	return "[style = \"" + style + "\" arrowhead = \"" + arrowhead +  "\" dir = \"" + dir + "\" taillabel = \"" + taillabel
-        			+ "\" headlabet = \""	+ headlabel + "\" label = \"" + title + "\"]";
+        			+ "\" headlabel = \""	+ headlabel + "\" label = \"" + title + "\"]";
         }
 
         public RelationType getType() {
@@ -378,9 +378,7 @@ class KlassBuilder {
         public void inferenceRelationsInterfaze(KlassBuilder builder) {
         	//Métodos
         	String name;
-        	System.out.println("OI");
             for (Method method : methodsL) {
-            	System.out.println("OI");
             	name = KlassBuilder.recoverEntityName(method.returnType);
             	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
             	  if (builder.klassMap.containsKey(name)) {
@@ -388,13 +386,14 @@ class KlassBuilder {
             		r.setType(RelationType.DDEPENDENCY);
             		r.explicit = false;
             		
-            		//Adicionar a relation no 
+            		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
             	  }
             	  if (builder.interfazeMap.containsKey(name)) {
             		Relation r = new Relation();
             		r.setType(RelationType.DDEPENDENCY);
             		r.explicit = false;
             		
+            		builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
             		//ADicionar
             	  }
             	}
@@ -407,7 +406,7 @@ class KlassBuilder {
               		r.setType(RelationType.DDEPENDENCY);
               		r.explicit = false;
               		
-              		
+              		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
               	  }
               	  
               	  if (builder.interfazeMap.containsKey(name)) {
@@ -415,6 +414,7 @@ class KlassBuilder {
               		r.setType(RelationType.DDEPENDENCY);
               		r.explicit = false;
               		
+              		builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
               	  }
               	}
               }
@@ -455,11 +455,12 @@ class KlassBuilder {
               		r.setType(RelationType.DASSOCIATION);
               		r.explicit = false;
               		
-              		if (KlassBuilder.isCollection(name)) {
+              		if (KlassBuilder.isCollection(attr.returnType)) {
               			r.headlabel = "0..*";
               		}
               		else r.headlabel = "1";
-              		//Adicionar a relation no 
+              		
+              		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
               	  }
               	}
         	}
@@ -473,7 +474,7 @@ class KlassBuilder {
             		r.setType(RelationType.DDEPENDENCY);
             		r.explicit = false;
             		
-            		//Adicionar a relation no 
+            		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
             	  }
             	  
             	  if (builder.interfazeMap.containsKey(name)) {
@@ -481,7 +482,7 @@ class KlassBuilder {
             		r.setType(RelationType.DDEPENDENCY);
             		r.explicit = false;
             		
-            		
+            		builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
             	  }
             	}
               
@@ -493,7 +494,7 @@ class KlassBuilder {
               		r.setType(RelationType.DDEPENDENCY);
               		r.explicit = false;
               		
-              		
+              		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
               	  }
               	  
               	  if (builder.interfazeMap.containsKey(name)) {
@@ -501,7 +502,7 @@ class KlassBuilder {
               		r.setType(RelationType.DDEPENDENCY);
               		r.explicit = false;
               		
-              		
+              		builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
               	  }
               	}
               }
@@ -698,6 +699,7 @@ class KlassBuilder {
 
             dot += "}>]\n";
             
+            // PROCESSAR AS RELAÇÕES INFERENCIADAS
             klass.inferenceRelationsKlass(this);
             
             modelId++;
@@ -713,8 +715,9 @@ class KlassBuilder {
                 dot += method.toStringUml() + "<br align=\"left\"/>";
             }
 
-            dot += "}>]\n";
+            dot += "}>]\n\n";
 
+            // PROFESSAR AS RELAÇÕES INFERENCIADAS
             inter.inferenceRelationsInterfaze(this);
             
             modelId++;
@@ -722,7 +725,27 @@ class KlassBuilder {
 
         // Direções dos grafos vai aqui
         
+        for (Map.Entry<String, Klass> entry : klassMap.entrySet()) {
+        	for (Map.Entry<String, Relation> klassRelation: entry.getValue().relationsWithClasses.entrySet()) {
+        		dot += entry.getValue().id + " -> " + klassMap.get(klassRelation.getKey()).id + " " + 
+        				klassRelation.getValue().toStringUml() + "\n\n";
+        	}
+        	for (Map.Entry<String, Relation> klassInterfaces: entry.getValue().relationsWithInterfaces.entrySet()) {
+        		dot += entry.getValue().id + " -> " + interfazeMap.get(klassInterfaces.getKey()).id + " " + 
+        				klassInterfaces.getValue().toStringUml() + "\n\n";
+        	}
+        }
         
+        for (Map.Entry<String, Interfaze> entry : interfazeMap.entrySet()) {
+        	for (Map.Entry<String, Relation> klassRelation: entry.getValue().relationsWithClasses.entrySet()) {
+        		dot += entry.getValue().id + " -> " + klassMap.get(klassRelation.getKey()).id + " " + 
+        				klassRelation.getValue().toStringUml() + "\n\n";
+        	}
+        	for (Map.Entry<String, Relation> klassInterfaces: entry.getValue().relationsWithInterfaces.entrySet()) {
+        		dot += entry.getValue().id + " -> " + interfazeMap.get(klassInterfaces.getKey()).id + " " + 
+        				klassInterfaces.getValue().toStringUml() + "\n\n";
+        	}
+        }
         
         //
         dot = dotHeader + dot + dotFooter;

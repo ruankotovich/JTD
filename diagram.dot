@@ -16,5 +16,21 @@ fontsize = 12
 4 [ label = <{<b>Student</b>|-c: Course<br align="left"/>-name: Name<br align="left"/>-studentID: Number<br align="left"/>|}>]
 5 [ label = <{<b>Course</b>|-name: Name<br align="left"/>-courseID: Number<br align="left"/>|}>]
 6 [ label = <{&lt;&lt;<i>Testas2</i>&gt;&gt;||-killthemall(p: People): void<br align="left"/>}>]
+
 7 [ label = <{&lt;&lt;<i>Test</i>&gt;&gt;||+breeki(v: I, a: D, k: M, e: E): Cheeki<br align="left"/>}>]
+
+1 -> 2 [style = "solid" arrowhead = "open" dir = "forward" taillabel = "" headlabel = "0..*" label = ""]
+
+1 -> 4 [style = "solid" arrowhead = "open" dir = "forward" taillabel = "" headlabel = "0..*" label = ""]
+
+2 -> 3 [style = "solid" arrowhead = "open" dir = "forward" taillabel = "" headlabel = "1" label = ""]
+
+2 -> 5 [style = "solid" arrowhead = "open" dir = "forward" taillabel = "" headlabel = "0..*" label = ""]
+
+3 -> 5 [style = "solid" arrowhead = "open" dir = "forward" taillabel = "" headlabel = "1" label = ""]
+
+4 -> 5 [style = "solid" arrowhead = "open" dir = "forward" taillabel = "" headlabel = "1" label = ""]
+
+6 -> 7 [style = "solid" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
 }
