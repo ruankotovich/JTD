@@ -45,3 +45,7 @@ class Instructor {
 Course c association @ "1..*" to "0..*" title "Teaches";
 Name name;
 }
+
+interface Test{
+public Cheeki breeki(I v, D a, M k, E e);
+}
