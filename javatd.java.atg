@@ -23,8 +23,9 @@ number_c = numberchar{numberchar}.
 literal_c = "\"" anys{anys} "\"".
 
 COMMENTS FROM "/*" TO "*/"
+COMMENTS FROM "//" TO '\n'
 
-IGNORE '\n'+'\t'
+IGNORE '\n'+'\t'+'\r'
 
 PRODUCTIONS
 
