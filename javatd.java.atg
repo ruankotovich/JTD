@@ -28,7 +28,11 @@ IGNORE '\n'+'\t'
 
 PRODUCTIONS
 
+<<<<<<< HEAD
 JTD2DOT = Definition{Definition} (. builder.printClasses(); builder.printInterfaces(); builder.ruleThemAll(); .).
+=======
+JTD2DOT = Definition{Definition} (. builder.processPrebuiltinRelations() ;builder.printClasses(); builder.printInterfaces();.).
+>>>>>>> cheeki
 
 // Definitions
 Definition = ClassDefinition | InterfaceDefinition.
@@ -37,13 +41,13 @@ ClassDefinition =
 "class" ClassName (. KlassBuilder.Klass clazz = new KlassBuilder.Klass(t.val); builder.klassMap.put(t.val, clazz); currentKlass = clazz; .)
 
 [
-"extends" ClassName(. clazz.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentKlass.addIfMoreImportantClass(t.val, rel);.)
-{"," ClassName(. clazz.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentKlass.addIfMoreImportantClass(t.val, relI);.)}
+"extends" ClassName(. clazz.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name,t.val, rel));.)
+{"," ClassName(. clazz.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name,t.val, relI));.)}
 ]
 
 [
-"implements" ClassName(. clazz.addImplements(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.REALIZATION); currentKlass.addIfMoreImportantInterface(t.val, rel);.)
-{"," ClassName(. clazz.addImplements(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.REALIZATION); currentKlass.addIfMoreImportantInterface(t.val, relI);.)}
+"implements" ClassName(. clazz.addImplements(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.REALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name,t.val, rel));.)
+{"," ClassName(. clazz.addImplements(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.REALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name,t.val, relI));.)}
 ]
 
 "{"
@@ -53,8 +57,8 @@ ClassDefinition =
 
 InterfaceDefinition = "interface" ClassName (. KlassBuilder.Interfaze interfaze = new KlassBuilder.Interfaze(t.val); builder.interfazeMap.put(t.val, interfaze);  currentInterfaze = interfaze; .)
 [
-"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportantInterface(t.val, rel); .)
-{"," ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportantInterface(t.val, relI); .)}
+"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentInterfaze.name,t.val, rel)); .)
+{"," ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentInterfaze.name,t.val, relI)); .)}
 ]
 "{"
 {InterfaceEntity<out KlassBuilder.Method ieout>(. interfaze.addMethod(ieout); .)}

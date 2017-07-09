@@ -94,7 +94,11 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		while (la.kind == 5 || la.kind == 11) {
 			Definition();
 		}
+<<<<<<< HEAD
 		builder.printClasses(); builder.printInterfaces(); builder.ruleThemAll(); 
+=======
+		builder.processPrebuiltinRelations() ;builder.printClasses(); builder.printInterfaces();
+>>>>>>> cheeki
 	}
 
 	void Definition() {
@@ -112,21 +116,21 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		if (la.kind == 6) {
 			Get();
 			ClassName();
-			clazz.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentKlass.addIfMoreImportantClass(t.val, rel);
+			clazz.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name,t.val, rel));
 			while (la.kind == 7) {
 				Get();
 				ClassName();
-				clazz.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentKlass.addIfMoreImportantClass(t.val, relI);
+				clazz.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name,t.val, relI));
 			}
 		}
 		if (la.kind == 8) {
 			Get();
 			ClassName();
-			clazz.addImplements(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.REALIZATION); currentKlass.addIfMoreImportantInterface(t.val, rel);
+			clazz.addImplements(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.REALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name,t.val, rel));
 			while (la.kind == 7) {
 				Get();
 				ClassName();
-				clazz.addImplements(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.REALIZATION); currentKlass.addIfMoreImportantInterface(t.val, relI);
+				clazz.addImplements(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.REALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name,t.val, relI));
 			}
 		}
 		Expect(9);
@@ -144,11 +148,11 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		if (la.kind == 6) {
 			Get();
 			ClassName();
-			interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportantInterface(t.val, rel); 
+			interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentInterfaze.name,t.val, rel)); 
 			while (la.kind == 7) {
 				Get();
 				ClassName();
-				interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportantInterface(t.val, relI); 
+				interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentInterfaze.name,t.val, relI)); 
 			}
 		}
 		Expect(9);
