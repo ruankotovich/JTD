@@ -94,7 +94,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		while (la.kind == 5 || la.kind == 11) {
 			Definition();
 		}
-		builder.printClasses(); builder.printInterfaces(); builder.ruleThemAll(); 
+		builder.printClasses(); builder.printInterfaces();
 	}
 
 	void Definition() {
@@ -112,21 +112,21 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		if (la.kind == 6) {
 			Get();
 			ClassName();
-			clazz.addExtends(t.val); 
+			clazz.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentKlass.addIfMoreImportantClass(t.val, rel);
 			while (la.kind == 7) {
 				Get();
 				ClassName();
-				clazz.addExtends(t.val); 
+				clazz.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentKlass.addIfMoreImportantClass(t.val, relI);
 			}
 		}
 		if (la.kind == 8) {
 			Get();
 			ClassName();
-			clazz.addExtends(t.val); 
+			clazz.addImplements(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.REALIZATION); currentKlass.addIfMoreImportantInterface(t.val, rel);
 			while (la.kind == 7) {
 				Get();
 				ClassName();
-				clazz.addExtends(t.val); 
+				clazz.addImplements(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.REALIZATION); currentKlass.addIfMoreImportantInterface(t.val, relI);
 			}
 		}
 		Expect(9);
@@ -144,7 +144,12 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		if (la.kind == 6) {
 			Get();
 			ClassName();
-			interfaze.addExtends(t.val); 
+			interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportant(t.val, rel); 
+			while (la.kind == 7) {
+				Get();
+				ClassName();
+				interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportant(t.val, relI); 
+			}
 		}
 		Expect(9);
 		while (StartOf(1)) {
@@ -155,7 +160,20 @@ KlassBuilder.Interfaze currentInterfaze = null;
 	}
 
 	void ClassName() {
+		String name=""; 
 		UpperName();
+		name+=t.val; 
+		while (la.kind == 1 || la.kind == 2 || la.kind == 3) {
+			if (la.kind == 2) {
+				UpperName();
+			} else if (la.kind == 1) {
+				LowerName();
+			} else {
+				Number();
+			}
+			name+=t.val; 
+		}
+		t.val = name; 
 	}
 
 	Object  ClassEntity() {
@@ -261,11 +279,24 @@ KlassBuilder.Interfaze currentInterfaze = null;
 	}
 
 	void EntityName() {
+		String name=""; 
 		if (la.kind == 2) {
 			UpperName();
 		} else if (la.kind == 1) {
 			LowerName();
 		} else SynErr(39);
+		name+=t.val; 
+		while (la.kind == 1 || la.kind == 2 || la.kind == 3) {
+			if (la.kind == 2) {
+				UpperName();
+			} else if (la.kind == 1) {
+				LowerName();
+			} else {
+				Number();
+			}
+			name+=t.val; 
+		}
+		t.val = name; 
 	}
 
 	ArrayList  MethodInterfaceCompletition() {
@@ -316,7 +347,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 			KlassBuilder.Method method = new KlassBuilder.Method(); anomalous_out = method; method.name = name; method.returnType = type; method.paramethers = paramethers; 
 		} else if (StartOf(3)) {
 			KlassBuilder.Relation ac = AttributeCompletition();
-			if(ac != null){currentKlass.relationsWithClasses.put(type.split("\\[")[0], ac);} 
+			if(ac != null){currentKlass.addIfMoreImportantClass(KlassBuilder.recoverEntityName(type), ac);} 
 			KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; 
 		} else SynErr(40);
 		return anomalous_out;
@@ -362,7 +393,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 	KlassBuilder.Relation  Relation() {
 		KlassBuilder.Relation  relation_out;
 		KlassBuilder.RelationType type = RelationType();
-		relation_out = new KlassBuilder.Relation(); relation_out.setType(type); 
+		relation_out = new KlassBuilder.Relation(); relation_out.setType(type); relation_out.explicit = true; 
 		if (la.kind == 18) {
 			Get();
 			Multiplicity();
