@@ -236,24 +236,41 @@ class KlassBuilder {
         public void addExtends(String klassKey) {
             this.extendsL.add(klassKey);
         }
-    }
-    
-    public void inferenceRelations(KlassBuilder builder) {
-    	//Atributos
-        for (Method method : methodsL) {
-          if (method.returnType.charAt(0) >= 'A' && method.returnType.charAt(0) <= 'Z') {
-        	  if (builder.klassMap.containsKey(method.returnType)) { // na realidade, tem que usar só o nome da classe, sem [], se tiver.
-        		Relation r = new Relation();
-        		r.setType(RelationType.DDEPENDENCY);
-        		r.explicit = false;
-        		
-        		//Adicionar a relation no 
-        	  }
-          }
-          
-          for (Paramether p : method.paramethers) {
-        	  
-          }
+        
+        public void inferenceRelations(KlassBuilder builder) {
+        	//Métodos
+        	String name;
+            for (Method method : methodsL) {
+            	name = KlassBuilder.recoverEntityName(method.returnType);
+            	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+            	  if (builder.klassMap.containsKey(name)) {
+            		Relation r = new Relation();
+            		r.setType(RelationType.DDEPENDENCY);
+            		r.explicit = false;
+            		
+            		//Adicionar a relation no 
+            	  }
+            	}
+              
+              for (Paramether p : method.paramethers) {
+            	  name = KlassBuilder.recoverEntityName(p.type);
+              	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+              	  if (builder.klassMap.containsKey(name)) {
+              		Relation r = new Relation();
+              		r.setType(RelationType.DDEPENDENCY);
+              		r.explicit = false;
+              		
+              		//Adicionar a relation no 
+              	  }
+              	  
+              	  if (builder.interfazeMap.containsKey(name)) {
+              		Relation r = new Relation();
+              		r.setType(RelationType.DDEPENDENCY);
+              		r.explicit = false;
+              	  }
+              	}
+              }
+            }
         }
     }
 
@@ -277,7 +294,62 @@ class KlassBuilder {
             relationsWithClasses = new HashMap<>();
             relationsWithInterfaces = new HashMap<>();
         }
-
+        
+        public void inferenceRelations(KlassBuilder builder) {
+        	String name;
+        	//Atributos
+        	for (Attribute attr : attributesL) {
+        		name = KlassBuilder.recoverEntityName(attr.returnType);
+        		
+        		if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+              	  if (builder.klassMap.containsKey(name)) {
+              		Relation r = new Relation();
+              		r.setType(RelationType.DASSOCIATION);
+              		r.explicit = false;
+              		
+              		if (KlassBuilder.isCollection(name)) {
+              			r.headlabel = "0..*";
+              		}
+              		else r.headlabel = "1";
+              		//Adicionar a relation no 
+              	  }
+              	}
+        	}
+        	
+        	//Métodos
+            for (Method method : methodsL) {
+            	name = KlassBuilder.recoverEntityName(method.returnType);
+            	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+            	  if (builder.klassMap.containsKey(name)) {
+            		Relation r = new Relation();
+            		r.setType(RelationType.DDEPENDENCY);
+            		r.explicit = false;
+            		
+            		//Adicionar a relation no 
+            	  }
+            	}
+              
+              for (Paramether p : method.paramethers) {
+            	  name = KlassBuilder.recoverEntityName(p.type);
+              	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+              	  if (builder.klassMap.containsKey(name)) {
+              		Relation r = new Relation();
+              		r.setType(RelationType.DDEPENDENCY);
+              		r.explicit = false;
+              		
+              		//Adicionar a relation no 
+              	  }
+              	  
+              	  if (builder.interfazeMap.containsKey(name)) {
+              		Relation r = new Relation();
+              		r.setType(RelationType.DDEPENDENCY);
+              		r.explicit = false;
+              	  }
+              	}
+              }
+            }
+        }
+        
         public boolean addIfMoreImportantClass(String clazz, KlassBuilder.Relation rel) {
             KlassBuilder.Relation currentRelation = this.relationsWithClasses.put(clazz, rel);
             if (currentRelation != null) {
