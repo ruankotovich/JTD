@@ -1,0 +1,18 @@
+/* COMMENTARY IGNORE */
+
+interface Breeki{
+  public void iv();
+  private int damke();
+}
+
+interface Cheeki extends Breeki{
+  public int[] vodkas();
+}
+
+class Bandit{
+  public Song[] songs;
+}
+
+class Song implements Cheeki{
+  public int[] consomeVodkas(People p){}
+}

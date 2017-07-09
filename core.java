@@ -33,25 +33,31 @@ class KlassBuilder {
     }
 
     public static enum RelationType {
-        ASSOCIATION("association"),
-        DASSOCIATION("dassociation"),
-        AGGREGATION("aggregation"),
-        DAGGREGATION("daggregation"),
-        COMPOSITION("composition"),
-        DCOMPOSITION("dcomposition"),
-        DEPENDENCY("dependency"),
-        DDEPENDENCY("ddependency"),
-        GENERALIZATION("generalization"),
-        REALIZATION("realization");
+        ASSOCIATION("association", 0),
+        DASSOCIATION("dassociation", 0),
+        AGGREGATION("aggregation", 0),
+        DAGGREGATION("daggregation", 0),
+        COMPOSITION("composition", 0),
+        DCOMPOSITION("dcomposition", 0),
+        DEPENDENCY("dependency", 0),
+        DDEPENDENCY("ddependency", 0),
+        GENERALIZATION("generalization", 0),
+        REALIZATION("realization", 0);
 
+        private final Integer weight;
         private final String typeName;
 
-        private RelationType(String typeName) {
+        private RelationType(String typeName, int weight) {
             this.typeName = typeName;
+            this.weight = weight;
         }
 
         public String getTypeName() {
             return typeName;
+        }
+
+        public Integer getWeight() {
+            return weight;
         }
 
         @Override
@@ -93,6 +99,10 @@ class KlassBuilder {
         public String toString() {
             return this.type.toString() + " @ \"" + headlabel + " to \"" + taillabel + "\" title \"" + title + "\"" + "\n"
                     + "style:" + style + "\tarrowhead:" + arrowhead + "\tdir:" + dir;
+        }
+
+        public RelationType getType() {
+            return type;
         }
 
         public void setType(RelationType type) {
@@ -166,7 +176,7 @@ class KlassBuilder {
 
     public static class Interfaze {
 
-        public HashMap<String, KlassBuilder.Relation> relationsWithInterfaces;
+        private HashMap<String, KlassBuilder.Relation> relationsWithInterfaces;
         public int id;
         public ArrayList<Method> methodsL;
         public ArrayList<String> extendsL; //key for the KlassMap
@@ -177,6 +187,24 @@ class KlassBuilder {
             methodsL = new ArrayList<>();
             extendsL = new ArrayList<>();
             relationsWithInterfaces = new HashMap<>();
+        }
+
+        public boolean addIfMoreImportant(String clazz, KlassBuilder.Relation rel) {
+            KlassBuilder.Relation currentRelation = this.relationsWithInterfaces.put(clazz, rel);
+            if (currentRelation != null) {
+                if (currentRelation.getType().getWeight() < rel.getType().getWeight()) {
+                    this.relationsWithInterfaces.replace(clazz, rel);
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        public HashMap<String, Relation> getRelationsWithInterfaces() {
+            return relationsWithInterfaces;
         }
 
         public void print() {
@@ -212,8 +240,8 @@ class KlassBuilder {
 
     public static class Klass {
 
-        public HashMap<String, KlassBuilder.Relation> relationsWithClasses;
-        public HashMap<String, KlassBuilder.Relation> relationsWithInterfaces;
+        private HashMap<String, KlassBuilder.Relation> relationsWithClasses;
+        private HashMap<String, KlassBuilder.Relation> relationsWithInterfaces;
         public int id;
         public ArrayList<Attribute> attributesL;
         public ArrayList<Method> methodsL;
@@ -229,6 +257,42 @@ class KlassBuilder {
             attributesL = new ArrayList<>();
             relationsWithClasses = new HashMap<>();
             relationsWithInterfaces = new HashMap<>();
+        }
+
+        public boolean addIfMoreImportantClass(String clazz, KlassBuilder.Relation rel) {
+            KlassBuilder.Relation currentRelation = this.relationsWithClasses.put(clazz, rel);
+            if (currentRelation != null) {
+                if (currentRelation.getType().getWeight() < rel.getType().getWeight()) {
+                    this.relationsWithClasses.replace(clazz, rel);
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        public boolean addIfMoreImportantInterface(String clazz, KlassBuilder.Relation rel) {
+            KlassBuilder.Relation currentRelation = this.relationsWithInterfaces.put(clazz, rel);
+            if (currentRelation != null) {
+                if (currentRelation.getType().getWeight() < rel.getType().getWeight()) {
+                    this.relationsWithInterfaces.replace(clazz, rel);
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        public HashMap<String, Relation> getRelationsWithClasses() {
+            return relationsWithClasses;
+        }
+
+        public HashMap<String, Relation> getRelationsWithInterfaces() {
+            return relationsWithInterfaces;
         }
 
         public void print() {
@@ -252,6 +316,13 @@ class KlassBuilder {
             System.out.println("- Relations with classes");
             for (Map.Entry<String, Relation> rel : this.relationsWithClasses.entrySet()) {
                 System.out.println("\t- With class " + rel.getKey());
+                System.out.println("\t\t");
+                System.out.println(rel.getValue());
+                System.out.println("\n\n");
+            }
+            System.out.println("- Relations with interfaces");
+            for (Map.Entry<String, Relation> rel : this.relationsWithInterfaces.entrySet()) {
+                System.out.println("\t- With interfaces " + rel.getKey());
                 System.out.println("\t\t");
                 System.out.println(rel.getValue());
                 System.out.println("\n\n");

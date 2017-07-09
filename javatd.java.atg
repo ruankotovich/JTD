@@ -28,7 +28,7 @@ IGNORE '\n'+'\t'
 
 PRODUCTIONS
 
-JTD2DOT = Definition{Definition} (. builder.printClasses(); builder.printInterfaces(); builder.ruleThemAll(); .).
+JTD2DOT = Definition{Definition} (. builder.printClasses(); builder.printInterfaces();.).
 
 // Definitions
 Definition = ClassDefinition | InterfaceDefinition.
@@ -37,13 +37,13 @@ ClassDefinition =
 "class" ClassName (. KlassBuilder.Klass clazz = new KlassBuilder.Klass(t.val); builder.klassMap.put(t.val, clazz); currentKlass = clazz; .)
 
 [
-"extends" ClassName(. clazz.addExtends(t.val); .)
-{"," ClassName(. clazz.addExtends(t.val); .)}
+"extends" ClassName(. clazz.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentKlass.addIfMoreImportantClass(t.val, rel);.)
+{"," ClassName(. clazz.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentKlass.addIfMoreImportantClass(t.val, relI);.)}
 ]
 
 [
-"implements" ClassName(. clazz.addExtends(t.val); .)
-{"," ClassName(. clazz.addExtends(t.val); .)}
+"implements" ClassName(. clazz.addImplements(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.REALIZATION); currentKlass.addIfMoreImportantInterface(t.val, rel);.)
+{"," ClassName(. clazz.addImplements(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.REALIZATION); currentKlass.addIfMoreImportantInterface(t.val, relI);.)}
 ]
 
 "{"
@@ -53,8 +53,8 @@ ClassDefinition =
 
 InterfaceDefinition = "interface" ClassName (. KlassBuilder.Interfaze interfaze = new KlassBuilder.Interfaze(t.val); builder.interfazeMap.put(t.val, interfaze);  currentInterfaze = interfaze; .)
 [
-"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.relationsWithInterfaces.put(t.val, rel); .)
-{"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.relationsWithInterfaces.put(t.val, rel); .)}
+"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportant(t.val, rel); .)
+{"," ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportant(t.val, relI); .)}
 ]
 "{"
 {InterfaceEntity<out KlassBuilder.Method ieout>(. interfaze.addMethod(ieout); .)}
@@ -102,7 +102,7 @@ VoidType(. method.returnType = "void"; .) EntityName(. method.name = t.val; .) M
 AnomalousEspecializer<out Object anomalous_out> (. anomalous_out = null; .) =
 CanonicalType<out String _type> (. String type = _type; .) EntityName (. String name = t.val; .) (
 MethodCompletition<out ArrayList paramethers>(. KlassBuilder.Method method = new KlassBuilder.Method(); anomalous_out = method; method.name = name; method.returnType = type; method.paramethers = paramethers; .)
-| AttributeCompletition<out KlassBuilder.Relation ac> (. if(ac != null){currentKlass.relationsWithClasses.put(KlassBuilder.recoverEntityName(type), ac);} .)(. KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; .)
+| AttributeCompletition<out KlassBuilder.Relation ac> (. if(ac != null){currentKlass.addIfMoreImportantClass(KlassBuilder.recoverEntityName(type), ac);} .)(. KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; .)
 ).
 
 // Methods and Attributes
