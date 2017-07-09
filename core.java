@@ -210,6 +210,29 @@ class KlassBuilder {
       relationsWithClasses = new HashMap<>();
       relationsWithInterfaces = new HashMap<>();
     }
+    
+    public void inferenceRelations(KlassBuilder builder) {
+    	//Atributos
+        for (Method method : methodsL) {
+          if (method.returnType.charAt(0) >= 'A' && method.returnType.charAt(0) <= 'Z') {
+        	  if (builder.klassMap.containsKey(method.returnType)) { // na realidade, tem que usar só o nome da classe, sem [], se tiver.
+        		Relation r = new Relation();
+        		r.setType(RelationType.DDEPENDENCY);
+        		r.explicit = false;
+        		
+        		//Adicionar a relation no 
+        	  }
+          }
+          
+          for (Paramether p : method.paramethers) {
+        	  
+          }
+        }
+    }
+
+	public void processRelations(KlassBuilder builder) {
+		
+	}
 
     public void print() {
       System.out.println("\n\n    @Class " + this.name);
@@ -308,7 +331,7 @@ class KlassBuilder {
 
       public String toStringUml() {
         return (modifyer.getType()) + (isStatic? "<u>" : "") + name + (isStatic? "</u>" : "") + ": " + returnType;
-      } 
+      }
     }
 
     public void ruleThemAll() {
