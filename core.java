@@ -21,7 +21,10 @@ class KlassBuilder {
     public void printClasses() {
         System.out.println("\n\n --- Classes : ");
         for (String className : klassMap.keySet()) {
-            klassMap.get(className).print();
+        	Klass klass = klassMap.get(className);
+        	
+            klass.print();
+            klass.inferenceRelationsKlass(this);
         }
     }
 
@@ -99,6 +102,11 @@ class KlassBuilder {
         public String toString() {
             return this.type.toString() + " @ \"" + headlabel + " to \"" + taillabel + "\" title \"" + title + "\"" + "\n"
                     + "style:" + style + "\tarrowhead:" + arrowhead + "\tdir:" + dir;
+        }
+        
+        public String toStringUml() {
+        	return "[style = \"" + style + "\" arrowhead = \"" + arrowhead +  "\" dir = \"" + dir + "\" taillabel = \"" + taillabel
+        			+ "\" headlabet = \""	+ headlabel + "\" label = \"" + title + "\"]";
         }
 
         public RelationType getType() {
@@ -252,7 +260,6 @@ class KlassBuilder {
                 System.out.println(rel.getValue());
                 System.out.println("\n\n");
             }
-
         }
 
         public void addMethod(Method m) {
@@ -263,10 +270,12 @@ class KlassBuilder {
             this.extendsL.add(klassKey);
         }
         
-        public void inferenceRelations(KlassBuilder builder) {
+        public void inferenceRelationsInterfaze(KlassBuilder builder) {
         	//Métodos
         	String name;
+        	System.out.println("OI");
             for (Method method : methodsL) {
+            	System.out.println("OI");
             	name = KlassBuilder.recoverEntityName(method.returnType);
             	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
             	  if (builder.klassMap.containsKey(name)) {
@@ -275,6 +284,13 @@ class KlassBuilder {
             		r.explicit = false;
             		
             		//Adicionar a relation no 
+            	  }
+            	  if (builder.interfazeMap.containsKey(name)) {
+            		Relation r = new Relation();
+            		r.setType(RelationType.DDEPENDENCY);
+            		r.explicit = false;
+            		
+            		//ADicionar
             	  }
             	}
               
@@ -286,13 +302,14 @@ class KlassBuilder {
               		r.setType(RelationType.DDEPENDENCY);
               		r.explicit = false;
               		
-              		//Adicionar a relation no 
+              		
               	  }
               	  
               	  if (builder.interfazeMap.containsKey(name)) {
               		Relation r = new Relation();
               		r.setType(RelationType.DDEPENDENCY);
               		r.explicit = false;
+              		
               	  }
               	}
               }
@@ -321,7 +338,7 @@ class KlassBuilder {
             relationsWithInterfaces = new HashMap<>();
         }
         
-        public void inferenceRelations(KlassBuilder builder) {
+        public void inferenceRelationsKlass(KlassBuilder builder) {
         	String name;
         	//Atributos
         	for (Attribute attr : attributesL) {
@@ -353,6 +370,14 @@ class KlassBuilder {
             		
             		//Adicionar a relation no 
             	  }
+            	  
+            	  if (builder.interfazeMap.containsKey(name)) {
+            		Relation r = new Relation();
+            		r.setType(RelationType.DDEPENDENCY);
+            		r.explicit = false;
+            		
+            		
+            	  }
             	}
               
               for (Paramether p : method.paramethers) {
@@ -363,13 +388,15 @@ class KlassBuilder {
               		r.setType(RelationType.DDEPENDENCY);
               		r.explicit = false;
               		
-              		//Adicionar a relation no 
+              		
               	  }
               	  
               	  if (builder.interfazeMap.containsKey(name)) {
               		Relation r = new Relation();
               		r.setType(RelationType.DDEPENDENCY);
               		r.explicit = false;
+              		
+              		
               	  }
               	}
               }
@@ -436,12 +463,17 @@ class KlassBuilder {
                 System.out.println("\t\t");
                 System.out.println(rel.getValue());
                 System.out.println("\n\n");
+                //System.out.println(rel.getValue().toStringUml());
+                System.out.println("\n\n");
             }
             System.out.println("- Relations with interfaces");
             for (Map.Entry<String, Relation> rel : this.relationsWithInterfaces.entrySet()) {
                 System.out.println("\t- With interfaces " + rel.getKey());
                 System.out.println("\t\t");
                 System.out.println(rel.getValue());
+                System.out.println("\n\n");
+                
+                //System.out.println(rel.getValue().toStringUml());
                 System.out.println("\n\n");
             }
         }
@@ -560,7 +592,9 @@ class KlassBuilder {
             }
 
             dot += "}>]\n";
-
+            
+            klass.inferenceRelationsKlass(this);
+            
             modelId++;
         }
 
@@ -576,10 +610,15 @@ class KlassBuilder {
 
             dot += "}>]\n";
 
+            inter.inferenceRelationsInterfaze(this);
+            
             modelId++;
         }
 
         // Direções dos grafos vai aqui
+        
+        
+        
         //
         dot = dotHeader + dot + dotFooter;
         System.out.println(dot);
