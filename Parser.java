@@ -94,7 +94,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		while (la.kind == 5 || la.kind == 11) {
 			Definition();
 		}
-		builder.processPrebuiltinRelations() ;builder.printClasses(); builder.printInterfaces();
+		builder.processPrebuiltinRelations() ;builder.printClasses(); builder.printInterfaces();  builder.ruleThemAll();
 	}
 
 	void Definition() {
@@ -397,10 +397,10 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		if (la.kind == 18) {
 			Get();
 			Multiplicity();
-			relation_out.headlabel = t.val; 
+			relation_out.taillabel = t.val; 
 			Expect(19);
 			Multiplicity();
-			relation_out.taillabel = t.val; 
+			relation_out.headlabel = t.val; 
 		}
 		if (la.kind == 20) {
 			Title();

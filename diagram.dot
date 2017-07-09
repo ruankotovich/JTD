@@ -10,11 +10,42 @@ edge [
 fontname = "Bitstream Vera Sans"
 fontsize = 12
 ]
-1 [ label = <{<b>School</b>|-name: Name<br align="left"/>-<u>address</u>: String<br align="left"/>-phone: Number<br align="left"/>-students: Student[]<br align="left"/>-depts: Department[]<br align="left"/>|+addStudent(): void<br align="left"/>-removeStudent(): void<br align="left"/>#getStudent(): void<br align="left"/>-getAllStudents(): void<br align="left"/>-addDepartment(): void<br align="left"/>-removeDepartment(): void<br align="left"/>-getDepartment(): void<br align="left"/>-getAllDepartments(): void<br align="left"/>}>]
-2 [ label = <{<b>Department</b>|-chair: Instructor<br align="left"/>-members: Instructor[]<br align="left"/>-courses: Course[]<br align="left"/>-name: Name<br align="left"/>|-addInstructor(): void<br align="left"/>-removeInstructor(): void<br align="left"/>-getInstructor(): void<br align="left"/>-getAllInstructors(): void<br align="left"/>}>]
-3 [ label = <{<b>Instructor</b>|-c: Course<br align="left"/>-name: Name<br align="left"/>|}>]
-4 [ label = <{<b>Student</b>|-c: Course<br align="left"/>-name: Name<br align="left"/>-studentID: Number<br align="left"/>|}>]
-5 [ label = <{<b>Course</b>|-name: Name<br align="left"/>-courseID: Number<br align="left"/>|}>]
-6 [ label = <{&lt;&lt;<i>Testas2</i>&gt;&gt;||-killthemall(p: People): void<br align="left"/>}>]
-7 [ label = <{&lt;&lt;<i>Test</i>&gt;&gt;||+breeki(v: I, a: D, k: M, e: E): Cheeki<br align="left"/>}>]
+1 [ label = <{<b>HttpResponseFacade</b>||}>]
+2 [ label = <{<b>HttpResponseWrapper</b>||}>]
+3 [ label = <{<b>ResponseFacade</b>||}>]
+4 [ label = <{<b>ResponseWrapper</b>||}>]
+5 [ label = <{<b>ResponseBase</b>||}>]
+6 [ label = <{<b>HttpResponseBase</b>||}>]
+7 [ label = <{&lt;&lt;<i>Response</i>&gt;&gt;||}>]
+
+8 [ label = <{&lt;&lt;<i>ServletResponse</i>&gt;&gt;||}>]
+
+9 [ label = <{&lt;&lt;<i>HttpResponse</i>&gt;&gt;||}>]
+
+10 [ label = <{&lt;&lt;<i>HttpServletResponse</i>&gt;&gt;||}>]
+
+1 -> 3 [style = "solid" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+1 -> 10 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+2 -> 4 [style = "solid" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+2 -> 9 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+3 -> 8 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+4 -> 7 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+5 -> 7 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+5 -> 8 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+6 -> 5 [style = "solid" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+6 -> 9 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+6 -> 10 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+9 -> 7 [style = "solid" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
 }

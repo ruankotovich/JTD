@@ -50,6 +50,6 @@ interface Test{
 public Cheeki breeki(I v, D a, M k, E e);
 }
 
-interface Testas2 extends Test, Instructor{
+interface Testas2 extends Test{
 private void killthemall(People p);
 }
