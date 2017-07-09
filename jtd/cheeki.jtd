@@ -11,7 +11,10 @@ interface Cheeki extends Breeki{
 
 class Bandit{
   public Song[] songs;
+  public IDCard idcard composition @ "0..*" to "1" title "has";
 }
+
+interface IDCard{}
 
 class Song implements Cheeki{
   public int[] consomeVodkas(People p){}

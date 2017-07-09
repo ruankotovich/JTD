@@ -94,7 +94,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		while (la.kind == 5 || la.kind == 11) {
 			Definition();
 		}
-		builder.printClasses(); builder.printInterfaces();
+		builder.processPrebuiltinRelations() ;builder.printClasses(); builder.printInterfaces();
 	}
 
 	void Definition() {
