@@ -1,0 +1,19 @@
+digraph {
+fontname = "Bitstream Vera Sans"
+fontsize = 12
+node [
+fontname = "Bitstream Vera Sans"
+fontsize = 12
+shape = "record"
+]
+edge [
+fontname = "Bitstream Vera Sans"
+fontsize = 12
+]
+1 [ label = <{<b>School</b>|-name: Name<br align="left"/>-<u>address</u>: String<br align="left"/>-phone: Number<br align="left"/>-students: Student[]<br align="left"/>-depts: Department[]<br align="left"/>|+addStudent(): void<br align="left"/>-removeStudent(): void<br align="left"/>#getStudent(): void<br align="left"/>-getAllStudents(): void<br align="left"/>-addDepartment(): void<br align="left"/>-removeDepartment(): void<br align="left"/>-getDepartment(): void<br align="left"/>-getAllDepartments(): void<br align="left"/>}>]
+2 [ label = <{<b>Department</b>|-chair: Instructor<br align="left"/>-members: Instructor[]<br align="left"/>-courses: Course[]<br align="left"/>-name: Name<br align="left"/>|-addInstructor(): void<br align="left"/>-removeInstructor(): void<br align="left"/>-getInstructor(): void<br align="left"/>-getAllInstructors(): void<br align="left"/>}>]
+3 [ label = <{<b>Instructor</b>|-c: Course<br align="left"/>-name: Name<br align="left"/>|}>]
+4 [ label = <{<b>Student</b>|-c: Course<br align="left"/>-name: Name<br align="left"/>-studentID: Number<br align="left"/>|}>]
+5 [ label = <{<b>Course</b>|-name: Name<br align="left"/>-courseID: Number<br align="left"/>|}>]
+6 [ label = <{&lt;&lt;<i>Test</i>&gt;&gt;||+breeki(v: I, a: D, k: M, e: E): Cheeki<br align="left"/>}>]
+}

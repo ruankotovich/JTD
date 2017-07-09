@@ -5,13 +5,13 @@
 
 class School {
 Name name;
-String address;
+static String address;
 Number phone;
 Student[] students aggregation @ "1..* " to "0..* " title "Member";
 Department[] depts composition @ "1..* " to "1..* " title "Has";
-void addStudent() {}
-void removeStudent() {}
-void getStudent() {}
+public void addStudent() {}
+private void removeStudent() {}
+protected void getStudent() {}
 void getAllStudents() {}
 void addDepartment() {}
 void removeDepartment() {}
