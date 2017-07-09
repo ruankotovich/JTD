@@ -49,3 +49,7 @@ Name name;
 interface Test{
 public Cheeki breeki(I v, D a, M k, E e);
 }
+
+interface Testas2 extends Test, Instructor{
+private void killthemall(People p);
+}

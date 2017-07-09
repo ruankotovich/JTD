@@ -144,7 +144,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		if (la.kind == 6) {
 			Get();
 			ClassName();
-			interfaze.addExtends(t.val); 
+			interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.relationsWithInterfaces.put(t.val, rel); 
 		}
 		Expect(9);
 		while (StartOf(1)) {
@@ -155,7 +155,20 @@ KlassBuilder.Interfaze currentInterfaze = null;
 	}
 
 	void ClassName() {
+		String name=""; 
 		UpperName();
+		name+=t.val; 
+		while (la.kind == 1 || la.kind == 2 || la.kind == 3) {
+			if (la.kind == 2) {
+				UpperName();
+			} else if (la.kind == 1) {
+				LowerName();
+			} else {
+				Number();
+			}
+			name+=t.val; 
+		}
+		t.val = name; 
 	}
 
 	Object  ClassEntity() {
@@ -261,11 +274,24 @@ KlassBuilder.Interfaze currentInterfaze = null;
 	}
 
 	void EntityName() {
+		String name=""; 
 		if (la.kind == 2) {
 			UpperName();
 		} else if (la.kind == 1) {
 			LowerName();
 		} else SynErr(39);
+		name+=t.val; 
+		while (la.kind == 1 || la.kind == 2 || la.kind == 3) {
+			if (la.kind == 2) {
+				UpperName();
+			} else if (la.kind == 1) {
+				LowerName();
+			} else {
+				Number();
+			}
+			name+=t.val; 
+		}
+		t.val = name; 
 	}
 
 	ArrayList  MethodInterfaceCompletition() {
@@ -316,7 +342,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 			KlassBuilder.Method method = new KlassBuilder.Method(); anomalous_out = method; method.name = name; method.returnType = type; method.paramethers = paramethers; 
 		} else if (StartOf(3)) {
 			KlassBuilder.Relation ac = AttributeCompletition();
-			if(ac != null){currentKlass.relationsWithClasses.put(type.split("\\[")[0], ac);} 
+			if(ac != null){currentKlass.relationsWithClasses.put(KlassBuilder.recoverEntityName(type), ac);} 
 			KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; 
 		} else SynErr(40);
 		return anomalous_out;

@@ -35,17 +35,36 @@ Definition = ClassDefinition | InterfaceDefinition.
 
 ClassDefinition =
 "class" ClassName (. KlassBuilder.Klass clazz = new KlassBuilder.Klass(t.val); builder.klassMap.put(t.val, clazz); currentKlass = clazz; .)
-["extends" ClassName(. clazz.addExtends(t.val); .){"," ClassName(. clazz.addExtends(t.val); .)}]
-["implements" ClassName(. clazz.addExtends(t.val); .){"," ClassName(. clazz.addExtends(t.val); .)}]
-"{" {ClassEntity<out Object entity> (. if(entity instanceof KlassBuilder.Method){ clazz.addMethod(((KlassBuilder.Method)entity)); }else{ clazz.addAttribute(((KlassBuilder.Attribute)entity)); } .) }"}".
+
+[
+"extends" ClassName(. clazz.addExtends(t.val); .)
+{"," ClassName(. clazz.addExtends(t.val); .)}
+]
+
+[
+"implements" ClassName(. clazz.addExtends(t.val); .)
+{"," ClassName(. clazz.addExtends(t.val); .)}
+]
+
+"{"
+{ClassEntity<out Object entity> (. if(entity instanceof KlassBuilder.Method){ clazz.addMethod(((KlassBuilder.Method)entity)); }else{ clazz.addAttribute(((KlassBuilder.Attribute)entity)); } .) }
+"}".
+
 
 InterfaceDefinition = "interface" ClassName (. KlassBuilder.Interfaze interfaze = new KlassBuilder.Interfaze(t.val); builder.interfazeMap.put(t.val, interfaze);  currentInterfaze = interfaze; .)
-["extends" ClassName (. interfaze.addExtends(t.val); .)]"{" {InterfaceEntity<out KlassBuilder.Method ieout>(. interfaze.addMethod(ieout); .)} "}".
+[
+"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.relationsWithInterfaces.put(t.val, rel); .)
+{"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.relationsWithInterfaces.put(t.val, rel); .)}
+]
+"{"
+{InterfaceEntity<out KlassBuilder.Method ieout>(. interfaze.addMethod(ieout); .)}
+"}".
+
 
 // Super Entities
 ClassEntity<out Object entity_out> = (. KlassBuilder.Modifyers generalModifyer = null; .)
-[Modifyers<out KlassBuilder.Modifyers modifyer> (. generalModifyer = modifyer; .)] Especializer<out Object especializer_out>
-(. entity_out = especializer_out;
+[Modifyers<out KlassBuilder.Modifyers modifyer> (. generalModifyer = modifyer; .)]
+Especializer<out Object especializer_out>(. entity_out = especializer_out;
 
 if(especializer_out instanceof KlassBuilder.Method){
   KlassBuilder.Method meth = ((KlassBuilder.Method)especializer_out);
@@ -58,13 +77,12 @@ if(especializer_out instanceof KlassBuilder.Method){
 }
 .).
 
+
 InterfaceEntity<out KlassBuilder.Method ieout_out > (. KlassBuilder.Modifyers generalModifyer = null; .)=
 [Modifyers<out KlassBuilder.Modifyers modifyer> (. generalModifyer = modifyer; .)]
-(. String type = "void"; .) (CanonicalType<out String typeI> (. type = typeI; .)
-|VoidType)
+(. String type = "void"; .) (CanonicalType<out String typeI> (. type = typeI; .) | VoidType)
 EntityName (. String name = t.val; .)
-MethodInterfaceCompletition<out ArrayList mic>
-(.
+MethodInterfaceCompletition<out ArrayList mic>(.
 ieout_out = new KlassBuilder.Method();
 ieout_out.name = name;
 ieout_out.returnType = type;
@@ -84,7 +102,7 @@ VoidType(. method.returnType = "void"; .) EntityName(. method.name = t.val; .) M
 AnomalousEspecializer<out Object anomalous_out> (. anomalous_out = null; .) =
 CanonicalType<out String _type> (. String type = _type; .) EntityName (. String name = t.val; .) (
 MethodCompletition<out ArrayList paramethers>(. KlassBuilder.Method method = new KlassBuilder.Method(); anomalous_out = method; method.name = name; method.returnType = type; method.paramethers = paramethers; .)
-| AttributeCompletition<out KlassBuilder.Relation ac> (. if(ac != null){currentKlass.relationsWithClasses.put(type.split("\\[")[0], ac);} .)(. KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; .)
+| AttributeCompletition<out KlassBuilder.Relation ac> (. if(ac != null){currentKlass.relationsWithClasses.put(KlassBuilder.recoverEntityName(type), ac);} .)(. KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; .)
 ).
 
 // Methods and Attributes
@@ -106,9 +124,8 @@ AttributeCompletition<out KlassBuilder.Relation ac_out> = (. ac_out = null; .) [
 CanonicalType<out String type_out> = (UpperName
 | LowerName)(. type_out = t.val; .) [ ArrayOperator<out String po> (. type_out += po; .) ].
 VoidType = "void".
-ClassName = UpperName.
-EntityName = (UpperName
-|LowerName).
+ClassName = (. String name=""; .) UpperName(. name+=t.val; .){(UpperName|LowerName|Number)(. name+=t.val; .)} (. t.val = name; .).
+EntityName = (. String name=""; .) (UpperName|LowerName)(. name+=t.val; .) {(UpperName|LowerName|Number)(. name+=t.val; .)} (. t.val = name; .).
 ArrayOperator<out String po_o>  (. po_o = "["; .)= "[" [Number (. po_o+=t.val; .)] "]" (. po_o+="]"; .).
 Relation<out KlassBuilder.Relation relation_out> = RelationType<out KlassBuilder.RelationType type>(. relation_out = new KlassBuilder.Relation(); relation_out.setType(type); .) ["@" Multiplicity(. relation_out.headlabel = t.val; .) "to" Multiplicity (. relation_out.taillabel = t.val; .)] [Title (. relation_out.title = t.val; .)].
 

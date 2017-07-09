@@ -15,5 +15,6 @@ fontsize = 12
 3 [ label = <{<b>Instructor</b>|-c: Course<br align="left"/>-name: Name<br align="left"/>|}>]
 4 [ label = <{<b>Student</b>|-c: Course<br align="left"/>-name: Name<br align="left"/>-studentID: Number<br align="left"/>|}>]
 5 [ label = <{<b>Course</b>|-name: Name<br align="left"/>-courseID: Number<br align="left"/>|}>]
-6 [ label = <{&lt;&lt;<i>Test</i>&gt;&gt;||+breeki(v: I, a: D, k: M, e: E): Cheeki<br align="left"/>}>]
+6 [ label = <{&lt;&lt;<i>Testas2</i>&gt;&gt;||}>]
+7 [ label = <{&lt;&lt;<i>Test</i>&gt;&gt;||+breeki(v: I, a: D, k: M, e: E): Cheeki<br align="left"/>}>]
 }
