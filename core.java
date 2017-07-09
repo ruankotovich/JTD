@@ -167,16 +167,16 @@ class KlassBuilder {
     }
 
     public static enum RelationType {
-        ASSOCIATION("association", 2),
-        DASSOCIATION("dassociation", 2),
+        ASSOCIATION("association", 1),
+        DASSOCIATION("dassociation", 1),
         AGGREGATION("aggregation", 3),
         DAGGREGATION("daggregation", 3),
         COMPOSITION("composition", 4),
         DCOMPOSITION("dcomposition", 4),
         DEPENDENCY("dependency", 0),
         DDEPENDENCY("ddependency", 0),
-        GENERALIZATION("generalization", 1),
-        REALIZATION("realization", 1);
+        GENERALIZATION("generalization", 2),
+        REALIZATION("realization", 2);
 
         private final Integer weight;
         private final String typeName;
