@@ -33,12 +33,12 @@ class KlassBuilder {
     }
 
     public static enum RelationType {
-        ASSOCIATION("association", 1),
-        DASSOCIATION("dassociation", 1),
-        AGGREGATION("aggregation", 1),
-        DAGGREGATION("daggregation", 1),
-        COMPOSITION("composition", 1),
-        DCOMPOSITION("dcomposition", 1),
+        ASSOCIATION("association", 2),
+        DASSOCIATION("dassociation", 2),
+        AGGREGATION("aggregation", 3),
+        DAGGREGATION("daggregation", 3),
+        COMPOSITION("composition", 4),
+        DCOMPOSITION("dcomposition", 4),
         DEPENDENCY("dependency", 0),
         DDEPENDENCY("ddependency", 0),
         GENERALIZATION("generalization", 1),
@@ -243,7 +243,7 @@ class KlassBuilder {
                 System.out.println(rel.getValue());
                 System.out.println("\n\n");
             }
-            
+
             System.out.println("\n\n-Relations with interfaces");
 
             for (Map.Entry<String, KlassBuilder.Relation> rel : relationsWithInterfaces.entrySet()) {
