@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +31,7 @@ class KlassBuilder {
         PUBLIC("+"),
         PRIVATE("-"),
         PROTECTED("#"),
-        DEFAULT("");
+        DEFAULT("-");
 
         private final String nType;
 
@@ -159,6 +161,18 @@ class KlassBuilder {
             paramethers.add(p);
         }
 
+        public String toStringUml() {
+        	String msg = modifyer.getType() + (isStatic? "<u>" : "") + name + (isStatic? "</u>" : "") + "(";
+        	boolean flag = false;
+        	for (KlassBuilder.Paramether par : paramethers) {
+        		if (flag) msg += ", ";
+                msg += (par.name + ": " + par.type);
+                flag = true;
+            }
+        	msg += "): " + returnType;
+        	return msg;
+        }
+
         public Method(){}
     }
 
@@ -168,10 +182,14 @@ class KlassBuilder {
         public AccessModifyer modifyer;
         public boolean isStatic;
         public Attribute(){}
+        
+        public String toStringUml() {
+        	return (modifyer.getType()) + (isStatic? "<u>" : "") + name + (isStatic? "</u>" : "") + ": " + returnType;
+        }
     }
 
 	public void ruleThemAll() {
-		String dotHeader = + "digraph {\n"
+		String dotHeader = "digraph {\n"
 		+ "fontname = \"Bitstream Vera Sans\"\n"
 		+ "fontsize = 12\n"
 		+ "node [\n"
@@ -184,14 +202,63 @@ class KlassBuilder {
 		+ "fontsize = 12\n"
 		+ "]\n";
 		String dotFooter = "}";
-
+		String dot = "";
 		int modelId = 1;
-
+		
+		//Gerar as boxes das Classes
 		for (Map.Entry<String, Klass> entry : klassMap.entrySet()) {
 			Klass klass = entry.getValue();
 			klass.id = modelId;
-			"[ label = <{<b>" + Room + "</b> ||}>]"
+			dot += Integer.toString(modelId) + " [ label = <{<b>" + entry.getKey() + "</b>|";
+
+			//Atributos
+			for (Attribute attr : klass.attributesL) {
+				String aux;
+				aux = attr.toStringUml();
+				
+				dot += aux + "<br align=\"left\"/>";
+			}
+
+			dot += "|";
+
+			for (Method method : klass.methodsL) {
+				dot += method.toStringUml() + "<br align=\"left\"/>";
+			}
+
+			dot += "}>]\n";
+
 			modelId++;
+		}
+		
+		//Gerar as boxes das Interfaces
+		for (Map.Entry<String, Interfaze> entry : interfazeMap.entrySet()) {
+			Interfaze inter = entry.getValue();
+			inter.id = modelId;
+			dot += Integer.toString(modelId) + " [ label = <{&lt;&lt;<i>" + entry.getKey() + "</i>&gt;&gt;||";
+
+			for (Method method : inter.methodsL) {
+				dot += method.toStringUml() + "<br align=\"left\"/>";
+			}
+
+			dot += "}>]\n";
+
+			modelId++;
+		}
+		
+		// Direções dos grafos vai aqui
+		
+		//
+		
+		
+		dot = dotHeader + dot + dotFooter;
+		System.out.println(dot);
+
+		try{
+		    PrintWriter writer = new PrintWriter("diagram.dot", "UTF-8");
+		    writer.println(dot);
+		    writer.close();
+		} catch (IOException e) {
+		   // do something
 		}
 	}
 }
