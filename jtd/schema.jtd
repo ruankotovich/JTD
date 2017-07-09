@@ -1,47 +1,47 @@
 /*
- * Schema model
- * UML User Guide p. 112
- */
+* Schema model
+* UML User Guide p. 112
+*/
 
 class School {
-        Name name;
-        String address;
-        Number phone;
-		Student[] students aggregation @ "1..* " to "0..* " title "Member";
-		Department[] depts composition @ "1..* " to "1..* " title "Has";
-        void addStudent() {}
-        void removeStudent() {}
-        void getStudent() {}
-        void getAllStudents() {}
-        void addDepartment() {}
-        void removeDepartment() {}
-        void getDepartment() {}
-        void getAllDepartments() {}
+Name name;
+String address;
+Number phone;
+Student[] students aggregation @ "1..* " to "0..* " title "Member";
+Department[] depts composition @ "1..* " to "1..* " title "Has";
+void addStudent() {}
+void removeStudent() {}
+void getStudent() {}
+void getAllStudents() {}
+void addDepartment() {}
+void removeDepartment() {}
+void getDepartment() {}
+void getAllDepartments() {}
 }
 
 class Department {
- 		Instructor chair association @ "0..*" to "0..1\nchair";
-		Instructor[] members aggregation @ "1..*" to "1..*" title "AssignedTo"; 
-		Course[] courses association @ "1..*" to "1..*";
-        Name name;
-        void addInstructor() {}
-        void removeInstructor() {}
-        void getInstructor() {}
-        void getAllInstructors() {}
+Instructor chair association @ "0..*" to "0..1\nchair";
+Instructor[] members aggregation @ "1..*" to "1..*" title "AssignedTo";
+Course[] courses association @ "1..*" to "1..*";
+Name name;
+void addInstructor() {}
+void removeInstructor() {}
+void getInstructor() {}
+void getAllInstructors() {}
 }
 
 class Student {
-		Course c association title "Attends";
-        Name name;
-        Number studentID;
+Course c association title "Attends";
+Name name;
+Number studentID;
 }
 
 class Course {
-        Name name;
-        Number courseID;
+Name name;
+Number courseID;
 }
 
 class Instructor {
-		Course c association @ "1..*" to "0..*" title "Teaches";
-        Name name;
+Course c association @ "1..*" to "0..*" title "Teaches";
+Name name;
 }

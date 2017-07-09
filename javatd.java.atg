@@ -5,9 +5,18 @@ import java.util.Map;
 class KlassBuilder {
 
   public Map<String, Klass> klassMap = new HashMap<>();
+  public Map<String, Interfaze> interfazeMap = new HashMap<>();
 
-  public void printClasses(){
-    
+  public void printClasses() {
+    for (String className : klassMap.keySet()) {
+      klassMap.get(className).print();
+    }
+  }
+
+  public void printInterfaces() {
+    for (String interfaceName : interfazeMap.keySet()) {
+      interfazeMap.get(interfaceName).print();
+    }
   }
 
   public static enum RelationType {
@@ -41,6 +50,45 @@ class KlassBuilder {
     }
   }
 
+  public static class Interfaze {
+
+    public ArrayList<Method> methodsL;
+    public ArrayList<String> extendsL; //key for the KlassMap
+    public ArrayList<String> implementsL; //key for the KlassMap
+    public String name;
+
+    public Interfaze(String n) {
+      this.name = n;
+      methodsL = new ArrayList<>();
+      extendsL = new ArrayList<>();
+      implementsL = new ArrayList<>();
+    }
+
+    public void print(){
+      System.out.println("@ Interface " + this.name);
+
+      System.out.println("\n\tMethods");
+      for (KlassBuilder.Method meth : this.methodsL) {
+        System.out.print("\t" + (meth.modifyer.getType()) + " " + (meth.isStatic ? "s" : "") + " "+meth.returnType+" " + meth.name + "(");
+        for (KlassBuilder.Paramether par : meth.paramethers) {
+          System.out.print(par.type + " " + par.name + ",");
+        }
+        System.out.println(")");
+      }
+    }
+
+    public void addMethod(Method m) {
+      this.methodsL.add(m);
+    }
+
+    public void addExtends(String klassKey) {
+      this.extendsL.add(klassKey);
+    }
+
+    public void addImplements(String klassKey) {
+      this.implementsL.add(klassKey);
+    }
+  }
 
   public static class Klass {
 
@@ -56,6 +104,25 @@ class KlassBuilder {
       extendsL = new ArrayList<>();
       implementsL = new ArrayList<>();
       attributesL = new ArrayList<>();
+    }
+
+    public void print(){
+      System.out.println("@ Class " + this.name);
+
+      System.out.println("\nAttributes");
+
+      for (KlassBuilder.Attribute attr : this.attributesL) {
+        System.out.println("\t" + (attr.modifyer.getType()) + " " + (attr.isStatic ? "s" : "") + " "+attr.returnType+" " + attr.name);
+      }
+
+      System.out.println("\n\tMethods");
+      for (KlassBuilder.Method meth : this.methodsL) {
+        System.out.print("\t" + (meth.modifyer.getType()) + " " + (meth.isStatic ? "s" : "") + " "+meth.returnType+" " + meth.name + "(");
+        for (KlassBuilder.Paramether par : meth.paramethers) {
+          System.out.print(par.type + " " + par.name + ",");
+        }
+        System.out.println(")");
+      }
     }
 
     public void addAttribute(Attribute a) {
@@ -99,29 +166,14 @@ class KlassBuilder {
       }
 
       public Method(){}
-
-        public Method(String n, String r, AccessModifyer m, boolean s) {
-          this.name = n;
-          this.returnType = r;
-          this.modifyer = m;
-          this.isStatic = s;
-          paramethers = new ArrayList<>();
-        }
       }
 
       public static class Attribute {
-
         public String name;
         public String returnType;
         public AccessModifyer modifyer;
         public boolean isStatic;
         public Attribute(){}
-          public Attribute(String n, String r, AccessModifyer m, boolean s) {
-            this.name = n;
-            this.returnType = r;
-            this.modifyer = m;
-            this.isStatic = s;
-          }
         }
       }
 
@@ -162,8 +214,22 @@ class KlassBuilder {
       InterfaceDefinition = "interface" ClassName ["extends" ClassName]"{" {InterfaceEntity} "}".
 
       // Super Entities
-      ClassEntity<out Object entity_out> = [Modifyers<out KlassBuilder.Modifyers modifyer>] Especializer<out Object especializer_out> (. entity_out = especializer_out; .).
-      InterfaceEntity = [Modifyers<out KlassBuilder.Modifyers modifyer>] (CanonicalType|VoidType) EntityName MethodInterfaceCompletition.
+      ClassEntity<out Object entity_out> = (. KlassBuilder.Modifyers generalModifyer = null; .)
+      [Modifyers<out KlassBuilder.Modifyers modifyer> (. generalModifyer = modifyer; .)] Especializer<out Object especializer_out>
+      (. entity_out = especializer_out;
+
+      if(especializer_out instanceof KlassBuilder.Method){
+        KlassBuilder.Method meth = ((KlassBuilder.Method)especializer_out);
+        meth.isStatic = generalModifyer != null? generalModifyer.isStatic : false;
+        meth.modifyer = generalModifyer != null? generalModifyer.access : KlassBuilder.AccessModifyer.DEFAULT;
+      }else{
+        KlassBuilder.Attribute attr = ((KlassBuilder.Attribute)especializer_out);
+        attr.isStatic = generalModifyer != null? generalModifyer.isStatic : false;
+        attr.modifyer = generalModifyer != null? generalModifyer.access : KlassBuilder.AccessModifyer.DEFAULT;
+      }
+      .).
+
+      InterfaceEntity = [Modifyers<out KlassBuilder.Modifyers modifyer>] (CanonicalType<out String typeI> (. String type = typeI; .)|VoidType) EntityName MethodInterfaceCompletition.
 
       // Especializers
       Especializer<out Object especializer> (. especializer = null; .)=
@@ -174,25 +240,28 @@ class KlassBuilder {
       VoidType(. method.returnType = "void"; .) EntityName(. method.name = t.val; .) MethodCompletition<out ArrayList paramethers>(. method.paramethers = paramethers; .).
 
       AnomalousEspecializer<out Object anomalous_out> (. anomalous_out = null; .) =
-      CanonicalType (. String type = t.val; .) EntityName (. String name = t.val; .) (
+      CanonicalType<out String _type> (. String type = _type; .) EntityName (. String name = t.val; .) (
       MethodCompletition<out ArrayList paramethers>(. KlassBuilder.Method method = new KlassBuilder.Method(); anomalous_out = method; method.name = name; method.returnType = type; method.paramethers = paramethers; .)
       | AttributeCompletition (. KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; .)
       ).
 
       // Methods and Attributes
-      MethodInterfaceCompletition = "("[CanonicalType EntityName {"," CanonicalType EntityName}] ")" ";".
+      MethodInterfaceCompletition = "("[CanonicalType<out String typeIC> (. String type = typeIC; .) EntityName {"," CanonicalType<out String _type> (. String type2 = _type; .) EntityName}] ")" ";".
 
       MethodCompletition<out ArrayList paramethers_out> (. paramethers_out = new ArrayList<>(); .)=
-      "(" {CanonicalType(. String type = t.val; .) EntityName (. String name = t.val; .) (. paramethers_out.add(new KlassBuilder.Paramether(name, type)); .)} ")" "{" "}" [";"].
+      "("
+      [CanonicalType<out String typeE> EntityName (. String nameE = t.val; .) (. paramethers_out.add(new KlassBuilder.Paramether(nameE, typeE)); .)
+      {CanonicalType<out String typeI> EntityName (. String nameI = t.val; .) (. paramethers_out.add(new KlassBuilder.Paramether(nameI, typeI)); .)}]
+      ")" "{" "}" [";"].
 
       AttributeCompletition = [Relation] ";".
 
       // Fetched Entities
-      CanonicalType = (UpperName | LowerName) [ArrayOperator].
+      CanonicalType<out String type_out> = (UpperName | LowerName)(. type_out = t.val; .) [ ArrayOperator<out String po> (. type_out += po; .) ].
       VoidType = "void".
       ClassName = UpperName.
       EntityName = (UpperName|LowerName).
-      ArrayOperator = "[" [Number] "]".
+      ArrayOperator<out String po_o>  (. po_o = "["; .)= "[" [Number (. po_o+=t.val; .)] "]" (. po_o+="]"; .).
       Relation = RelationType<out KlassBuilder.RelationType type> ["@" Multiplicity "to" Multiplicity] [Title].
 
       // Generic Rules
