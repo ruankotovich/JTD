@@ -33,12 +33,12 @@ class KlassBuilder {
     }
 
     public static enum RelationType {
-        ASSOCIATION("association", 1),
-        DASSOCIATION("dassociation", 1),
-        AGGREGATION("aggregation", 1),
-        DAGGREGATION("daggregation", 1),
-        COMPOSITION("composition", 1),
-        DCOMPOSITION("dcomposition", 1),
+        ASSOCIATION("association", 2),
+        DASSOCIATION("dassociation", 2),
+        AGGREGATION("aggregation", 3),
+        DAGGREGATION("daggregation", 3),
+        COMPOSITION("composition", 4),
+        DCOMPOSITION("dcomposition", 4),
         DEPENDENCY("dependency", 0),
         DDEPENDENCY("ddependency", 0),
         GENERALIZATION("generalization", 1),
@@ -177,6 +177,7 @@ class KlassBuilder {
     public static class Interfaze {
 
         private HashMap<String, KlassBuilder.Relation> relationsWithInterfaces;
+        private HashMap<String, KlassBuilder.Relation> relationsWithClasses;
         public int id;
         public ArrayList<Method> methodsL;
         public ArrayList<String> extendsL; //key for the KlassMap
@@ -187,13 +188,28 @@ class KlassBuilder {
             methodsL = new ArrayList<>();
             extendsL = new ArrayList<>();
             relationsWithInterfaces = new HashMap<>();
+            relationsWithClasses = new HashMap<>();
         }
 
-        public boolean addIfMoreImportant(String clazz, KlassBuilder.Relation rel) {
+        public boolean addIfMoreImportantInterface(String clazz, KlassBuilder.Relation rel) {
             KlassBuilder.Relation currentRelation = this.relationsWithInterfaces.put(clazz, rel);
             if (currentRelation != null) {
                 if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
                     this.relationsWithInterfaces.replace(clazz, rel);
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        public boolean addIfMoreImportantClass(String clazz, KlassBuilder.Relation rel) {
+            KlassBuilder.Relation currentRelation = this.relationsWithClasses.put(clazz, rel);
+            if (currentRelation != null) {
+                if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
+                    this.relationsWithClasses.replace(clazz, rel);
                     return true;
                 } else {
                     return false;
@@ -218,7 +234,17 @@ class KlassBuilder {
                 }
                 System.out.println(")");
             }
-            System.out.println("\n\n-Relations");
+
+            System.out.println("\n\n-Relations with classes");
+
+            for (Map.Entry<String, KlassBuilder.Relation> rel : relationsWithClasses.entrySet()) {
+                System.out.println("\t- With class" + rel.getKey());
+                System.out.println("\t\t");
+                System.out.println(rel.getValue());
+                System.out.println("\n\n");
+            }
+
+            System.out.println("\n\n-Relations with interfaces");
 
             for (Map.Entry<String, KlassBuilder.Relation> rel : relationsWithInterfaces.entrySet()) {
                 System.out.println("\t- With interface " + rel.getKey());
