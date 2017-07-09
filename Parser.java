@@ -347,7 +347,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 			KlassBuilder.Method method = new KlassBuilder.Method(); anomalous_out = method; method.name = name; method.returnType = type; method.paramethers = paramethers; 
 		} else if (StartOf(3)) {
 			KlassBuilder.Relation ac = AttributeCompletition();
-			if(ac != null){currentKlass.addIfMoreImportantClass(KlassBuilder.recoverEntityName(type), ac);} 
+			if(ac != null){builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name ,KlassBuilder.recoverEntityName(type), ac));} 
 			KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; 
 		} else SynErr(40);
 		return anomalous_out;

@@ -9,6 +9,20 @@ class KlassBuilder {
 
     public Map<String, Klass> klassMap = new HashMap<>();
     public Map<String, Interfaze> interfazeMap = new HashMap<>();
+    public ArrayList<PrebuiltRelation> prebuiltRelations = new ArrayList<>();
+
+    public static class PrebuiltRelation {
+
+        public String from;
+        public String to;
+        public KlassBuilder.Relation relation;
+
+        public PrebuiltRelation(String from, String to, Relation relation) {
+            this.from = from;
+            this.to = to;
+            this.relation = relation;
+        }
+    }
 
     public static String recoverEntityName(String entity) {
         return entity.split("\\[")[0];
@@ -16,6 +30,93 @@ class KlassBuilder {
 
     public static boolean isCollection(String entity) {
         return entity.contains("\\[");
+    }
+
+    public boolean replaceIfMoreImportant(Object from, Object to, KlassBuilder.Relation rel) {
+        HashMap<String, Relation> relationsFrom;
+
+        String fromName;
+        String toName;
+
+        if (from instanceof KlassBuilder.Klass) {
+            KlassBuilder.Klass fromObj = ((KlassBuilder.Klass) from);
+            fromName = fromObj.name;
+
+            if (to instanceof KlassBuilder.Klass) {
+                KlassBuilder.Klass toObj = ((KlassBuilder.Klass) to);
+                toName = toObj.name;
+                relationsFrom = fromObj.getRelationsWithClasses();
+            } else {
+                KlassBuilder.Interfaze toObj = ((KlassBuilder.Interfaze) to);
+                toName = toObj.name;
+                relationsFrom = fromObj.getRelationsWithInterfaces();
+            }
+
+        } else {
+            KlassBuilder.Interfaze fromObj = ((KlassBuilder.Interfaze) from);
+            fromName = fromObj.name;
+
+            if (to instanceof KlassBuilder.Klass) {
+                KlassBuilder.Klass toObj = ((KlassBuilder.Klass) to);
+                toName = toObj.name;
+                relationsFrom = fromObj.getRelationsWithClasses();
+            } else {
+                KlassBuilder.Interfaze toObj = ((KlassBuilder.Interfaze) to);
+                toName = toObj.name;
+                relationsFrom = fromObj.getRelationsWithInterfaces();
+            }
+
+        }
+
+        KlassBuilder.Relation relationFromTo = relationsFrom.get(toName);
+
+        if (relationFromTo != null) { // there's a relation from to
+            if (!relationFromTo.explicit && relationFromTo.getType().getWeight() < rel.getType().getWeight()) {
+                relationsFrom.replace(toName, rel);
+            } else {
+                return false;
+            }
+        } else {
+            relationsFrom.put(toName, rel);
+        }
+        return true;
+
+//        if (relationFromTo != null) { // there's a relation from to
+//
+//            if (!relationFromTo.explicit && relationFromTo.getType().getWeight() < rel.getType().getWeight()) {
+//                relationsFrom.remove(toName); // the relation here was weaker than this one
+//            } else {
+//                return false; //there's a relation explicit here
+//            }
+//
+//            if (relationToFrom != null) { // there's a relation to from
+//
+//                if (!relationToFrom.explicit && relationToFrom.getType().weight < rel.getType().getWeight()) {
+//                    relationsTo.remove(fromName); // the relation to from was weaker than this one
+//                    relationsFrom.put(toName, rel);
+//                    return true;
+//                }
+//                return false;
+//
+//            } else { // theresn't a relation from to
+//                relationsFrom.put(toName, rel); // the previous relation was weaker than this;
+//                return true;
+//            }
+//
+//        } else { // theresn't a relation from to
+//            if (relationToFrom != null) { // there's a relation from to
+//                if (!relationToFrom.explicit && relationToFrom.getType().weight < rel.getType().getWeight()) {
+//                    relationsTo.remove(fromName); // the relation to from was weaker than this one
+//                    relationsFrom.put(toName, rel);
+//                    return true;
+//                }
+//
+//                return false;
+//            } else { // theresn't a relation to from
+//                relationsFrom.put(toName, rel); // the previous relation was weaker than this;
+//                return true;
+//            }
+//        }
     }
 
     public void printClasses() {
@@ -221,6 +322,10 @@ class KlassBuilder {
 
         public HashMap<String, Relation> getRelationsWithInterfaces() {
             return relationsWithInterfaces;
+        }
+
+        public HashMap<String, Relation> getRelationsWithClasses() {
+            return relationsWithClasses;
         }
 
         public void print() {

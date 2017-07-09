@@ -102,7 +102,7 @@ VoidType(. method.returnType = "void"; .) EntityName(. method.name = t.val; .) M
 AnomalousEspecializer<out Object anomalous_out> (. anomalous_out = null; .) =
 CanonicalType<out String _type> (. String type = _type; .) EntityName (. String name = t.val; .) (
 MethodCompletition<out ArrayList paramethers>(. KlassBuilder.Method method = new KlassBuilder.Method(); anomalous_out = method; method.name = name; method.returnType = type; method.paramethers = paramethers; .)
-| AttributeCompletition<out KlassBuilder.Relation ac> (. if(ac != null){currentKlass.addIfMoreImportantClass(KlassBuilder.recoverEntityName(type), ac);} .)(. KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; .)
+| AttributeCompletition<out KlassBuilder.Relation ac> (. if(ac != null){builder.prebuiltRelations.add(new KlassBuilder.PrebuiltRelation(currentKlass.name ,KlassBuilder.recoverEntityName(type), ac));} .)(. KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; .)
 ).
 
 // Methods and Attributes
