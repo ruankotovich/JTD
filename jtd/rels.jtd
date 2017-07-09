@@ -25,5 +25,7 @@ void connect() {}
 }
 
 class ChannelIterator {
-SetTopController sc dependency title "friend";
+
+
+void pipoca(int oi) {}
 }
