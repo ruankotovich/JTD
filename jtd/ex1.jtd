@@ -1,0 +1,28 @@
+interface MachineLearning {}
+
+interface SupervisedLearning extends MachineLearning {}
+
+interface Regression extends SupervisedLearning {}
+
+interface UnsupervisedLearning extends MachineLearning {}
+interface Clustering extends UnsupervisedLearning {}
+interface AssociationRuleDiscovery extends UnsupervisedLearning {}
+
+class SupervisedLearningMethod implements SupervisedLearning {}
+
+class Classifier implements SupervisedLearning {
+	void classify(SupervisedLearningMethod method) {}
+}
+
+class Bayesian extends SupervisedLearningMethod {}
+class NaiveBayes extends Bayesian {}
+class BayesianBeliefNetwork extends Bayesian {}
+
+class DecisionTree extends SupervisedLearningMethod {}
+class C45 extends DecisionTree {}
+class M5 extends DecisionTree {}
+
+class Ensemble implements MachineLearning {
+	Classifier[] classifiers;
+}
+

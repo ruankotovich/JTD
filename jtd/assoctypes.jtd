@@ -2,8 +2,8 @@
  * Associations with visibility
  * UML User Guide p. 145
  */
- 
-class UserGroup {
+
+class UserGroup extends Pipoca {
 	User[] users association @ "0..*" to "0..* (user)";
 }
 
