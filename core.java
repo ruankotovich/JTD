@@ -33,16 +33,16 @@ class KlassBuilder {
     }
 
     public static enum RelationType {
-        ASSOCIATION("association", 0),
-        DASSOCIATION("dassociation", 0),
-        AGGREGATION("aggregation", 0),
-        DAGGREGATION("daggregation", 0),
-        COMPOSITION("composition", 0),
-        DCOMPOSITION("dcomposition", 0),
+        ASSOCIATION("association", 1),
+        DASSOCIATION("dassociation", 1),
+        AGGREGATION("aggregation", 1),
+        DAGGREGATION("daggregation", 1),
+        COMPOSITION("composition", 1),
+        DCOMPOSITION("dcomposition", 1),
         DEPENDENCY("dependency", 0),
         DDEPENDENCY("ddependency", 0),
-        GENERALIZATION("generalization", 0),
-        REALIZATION("realization", 0);
+        GENERALIZATION("generalization", 1),
+        REALIZATION("realization", 1);
 
         private final Integer weight;
         private final String typeName;
@@ -88,7 +88,7 @@ class KlassBuilder {
 
         private RelationType type = null;
         public String title = "";
-
+        public boolean explicit = false;
         public String headlabel = "";
         public String taillabel = "";
         public String style = "";
@@ -121,31 +121,31 @@ class KlassBuilder {
                 case AGGREGATION:
                     this.dir = "none";
                     this.style = "solid";
-                    this.arrowhead = "open";
+                    this.arrowhead = "odiamond";
                     break;
                 case DAGGREGATION:
                     this.dir = "forward";
                     this.style = "solid";
-                    this.arrowhead = "open";
+                    this.arrowhead = "odiamond";
                     break;
                 case COMPOSITION:
                     this.dir = "none";
                     this.style = "solid";
-                    this.arrowhead = "open";
+                    this.arrowhead = "diamond";
                     break;
                 case DCOMPOSITION:
                     this.dir = "forward";
                     this.style = "solid";
-                    this.arrowhead = "open";
+                    this.arrowhead = "diamond";
                     break;
                 case DEPENDENCY:
                     this.dir = "none";
-                    this.style = "solid";
+                    this.style = "dashed";
                     this.arrowhead = "open";
                     break;
                 case DDEPENDENCY:
                     this.dir = "forward";
-                    this.style = "solid";
+                    this.style = "dashed";
                     this.arrowhead = "open";
                     break;
                 case GENERALIZATION:
@@ -192,7 +192,7 @@ class KlassBuilder {
         public boolean addIfMoreImportant(String clazz, KlassBuilder.Relation rel) {
             KlassBuilder.Relation currentRelation = this.relationsWithInterfaces.put(clazz, rel);
             if (currentRelation != null) {
-                if (currentRelation.getType().getWeight() < rel.getType().getWeight()) {
+                if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
                     this.relationsWithInterfaces.replace(clazz, rel);
                     return true;
                 } else {
@@ -262,7 +262,7 @@ class KlassBuilder {
         public boolean addIfMoreImportantClass(String clazz, KlassBuilder.Relation rel) {
             KlassBuilder.Relation currentRelation = this.relationsWithClasses.put(clazz, rel);
             if (currentRelation != null) {
-                if (currentRelation.getType().getWeight() < rel.getType().getWeight()) {
+                if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
                     this.relationsWithClasses.replace(clazz, rel);
                     return true;
                 } else {
@@ -276,7 +276,7 @@ class KlassBuilder {
         public boolean addIfMoreImportantInterface(String clazz, KlassBuilder.Relation rel) {
             KlassBuilder.Relation currentRelation = this.relationsWithInterfaces.put(clazz, rel);
             if (currentRelation != null) {
-                if (currentRelation.getType().getWeight() < rel.getType().getWeight()) {
+                if (currentRelation.getType().getWeight() < rel.getType().getWeight() && !currentRelation.explicit) {
                     this.relationsWithInterfaces.replace(clazz, rel);
                     return true;
                 } else {

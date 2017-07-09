@@ -393,7 +393,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 	KlassBuilder.Relation  Relation() {
 		KlassBuilder.Relation  relation_out;
 		KlassBuilder.RelationType type = RelationType();
-		relation_out = new KlassBuilder.Relation(); relation_out.setType(type); 
+		relation_out = new KlassBuilder.Relation(); relation_out.setType(type); relation_out.explicit = true; 
 		if (la.kind == 18) {
 			Get();
 			Multiplicity();

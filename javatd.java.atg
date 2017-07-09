@@ -127,7 +127,7 @@ VoidType = "void".
 ClassName = (. String name=""; .) UpperName(. name+=t.val; .){(UpperName|LowerName|Number)(. name+=t.val; .)} (. t.val = name; .).
 EntityName = (. String name=""; .) (UpperName|LowerName)(. name+=t.val; .) {(UpperName|LowerName|Number)(. name+=t.val; .)} (. t.val = name; .).
 ArrayOperator<out String po_o>  (. po_o = "["; .)= "[" [Number (. po_o+=t.val; .)] "]" (. po_o+="]"; .).
-Relation<out KlassBuilder.Relation relation_out> = RelationType<out KlassBuilder.RelationType type>(. relation_out = new KlassBuilder.Relation(); relation_out.setType(type); .) ["@" Multiplicity(. relation_out.headlabel = t.val; .) "to" Multiplicity (. relation_out.taillabel = t.val; .)] [Title (. relation_out.title = t.val; .)].
+Relation<out KlassBuilder.Relation relation_out> = RelationType<out KlassBuilder.RelationType type>(. relation_out = new KlassBuilder.Relation(); relation_out.setType(type); relation_out.explicit = true; .) ["@" Multiplicity(. relation_out.headlabel = t.val; .) "to" Multiplicity (. relation_out.taillabel = t.val; .)] [Title (. relation_out.title = t.val; .)].
 
 // Generic Rules
 Modifyers <out KlassBuilder.Modifyers modifyer_out> (. modifyer_out = new KlassBuilder.Modifyers(); .) =
