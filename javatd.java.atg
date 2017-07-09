@@ -201,6 +201,7 @@ class KlassBuilder {
 
       // Definitions
       Definition = ClassDefinition | InterfaceDefinition.
+
       ClassDefinition =
       "class" ClassName (. KlassBuilder.Klass clazz = new KlassBuilder.Klass(t.val); builder.klassMap.put(t.val, clazz); .)
       ["extends" ClassName(. clazz.addExtends(t.val); .){"," ClassName(. clazz.addExtends(t.val); .)}]
@@ -228,7 +229,8 @@ class KlassBuilder {
 
       InterfaceEntity<out KlassBuilder.Method ieout_out > (. KlassBuilder.Modifyers generalModifyer = null; .)=
       [Modifyers<out KlassBuilder.Modifyers modifyer> (. generalModifyer = modifyer; .)]
-      (. String type = "void"; .) (CanonicalType<out String typeI> (. type = typeI; .)|VoidType)
+      (. String type = "void"; .) (CanonicalType<out String typeI> (. type = typeI; .)
+      |VoidType)
       EntityName (. String name = t.val; .)
       MethodInterfaceCompletition<out ArrayList mic>
       (.
@@ -264,16 +266,18 @@ class KlassBuilder {
       MethodCompletition<out ArrayList paramethers_out> (. paramethers_out = new ArrayList<>(); .)=
       "("
       [CanonicalType<out String typeE> EntityName (. String nameE = t.val; .) (. paramethers_out.add(new KlassBuilder.Paramether(nameE, typeE)); .)
-      {CanonicalType<out String typeI> EntityName (. String nameI = t.val; .) (. paramethers_out.add(new KlassBuilder.Paramether(nameI, typeI)); .)}]
+      {"," CanonicalType<out String typeI> EntityName (. String nameI = t.val; .) (. paramethers_out.add(new KlassBuilder.Paramether(nameI, typeI)); .)}]
       ")" "{" "}" [";"].
 
       AttributeCompletition = [Relation] ";".
 
       // Fetched Entities
-      CanonicalType<out String type_out> = (UpperName | LowerName)(. type_out = t.val; .) [ ArrayOperator<out String po> (. type_out += po; .) ].
+      CanonicalType<out String type_out> = (UpperName
+      | LowerName)(. type_out = t.val; .) [ ArrayOperator<out String po> (. type_out += po; .) ].
       VoidType = "void".
       ClassName = UpperName.
-      EntityName = (UpperName|LowerName).
+      EntityName = (UpperName
+      |LowerName).
       ArrayOperator<out String po_o>  (. po_o = "["; .)= "[" [Number (. po_o+=t.val; .)] "]" (. po_o+="]"; .).
       Relation = RelationType<out KlassBuilder.RelationType type> ["@" Multiplicity "to" Multiplicity] [Title].
 
