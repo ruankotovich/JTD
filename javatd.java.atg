@@ -53,8 +53,8 @@ ClassDefinition =
 
 InterfaceDefinition = "interface" ClassName (. KlassBuilder.Interfaze interfaze = new KlassBuilder.Interfaze(t.val); builder.interfazeMap.put(t.val, interfaze);  currentInterfaze = interfaze; .)
 [
-"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportant(t.val, rel); .)
-{"," ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportant(t.val, relI); .)}
+"extends" ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportantInterface(t.val, rel); .)
+{"," ClassName (. interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportantInterface(t.val, relI); .)}
 ]
 "{"
 {InterfaceEntity<out KlassBuilder.Method ieout>(. interfaze.addMethod(ieout); .)}

@@ -144,11 +144,11 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		if (la.kind == 6) {
 			Get();
 			ClassName();
-			interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportant(t.val, rel); 
+			interfaze.addExtends(t.val); KlassBuilder.Relation rel = new KlassBuilder.Relation(); rel.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportantInterface(t.val, rel); 
 			while (la.kind == 7) {
 				Get();
 				ClassName();
-				interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportant(t.val, relI); 
+				interfaze.addExtends(t.val); KlassBuilder.Relation relI = new KlassBuilder.Relation(); relI.setType(KlassBuilder.RelationType.GENERALIZATION); currentInterfaze.addIfMoreImportantInterface(t.val, relI); 
 			}
 		}
 		Expect(9);
