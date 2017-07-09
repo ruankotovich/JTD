@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-<<<<<<< HEAD
 
-=======
-
-      
->>>>>>> master
 
 public class Parser {
 	public static final int _EOF = 0;
@@ -31,15 +26,10 @@ public class Parser {
 	public Errors errors;
 
 	KlassBuilder builder = new KlassBuilder();
-<<<<<<< HEAD
 KlassBuilder.Klass currentKlass = null;
 KlassBuilder.Interfaze currentInterfaze = null;
 
 
-=======
-
-      
->>>>>>> master
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
@@ -104,11 +94,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		while (la.kind == 5 || la.kind == 11) {
 			Definition();
 		}
-<<<<<<< HEAD
-		builder.printClasses(); builder.printInterfaces(); 
-=======
 		builder.printClasses(); builder.printInterfaces(); builder.ruleThemAll(); 
->>>>>>> master
 	}
 
 	void Definition() {
@@ -122,11 +108,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 	void ClassDefinition() {
 		Expect(5);
 		ClassName();
-<<<<<<< HEAD
 		KlassBuilder.Klass clazz = new KlassBuilder.Klass(t.val); builder.klassMap.put(t.val, clazz); currentKlass = clazz; 
-=======
-		KlassBuilder.Klass clazz = new KlassBuilder.Klass(t.val); builder.klassMap.put(t.val, clazz); 
->>>>>>> master
 		if (la.kind == 6) {
 			Get();
 			ClassName();
@@ -158,11 +140,7 @@ KlassBuilder.Interfaze currentInterfaze = null;
 	void InterfaceDefinition() {
 		Expect(11);
 		ClassName();
-<<<<<<< HEAD
 		KlassBuilder.Interfaze interfaze = new KlassBuilder.Interfaze(t.val); builder.interfazeMap.put(t.val, interfaze);  currentInterfaze = interfaze; 
-=======
-		KlassBuilder.Interfaze interfaze = new KlassBuilder.Interfaze(t.val); builder.interfazeMap.put(t.val, interfaze); 
->>>>>>> master
 		if (la.kind == 6) {
 			Get();
 			ClassName();
@@ -337,12 +315,8 @@ KlassBuilder.Interfaze currentInterfaze = null;
 			ArrayList paramethers = MethodCompletition();
 			KlassBuilder.Method method = new KlassBuilder.Method(); anomalous_out = method; method.name = name; method.returnType = type; method.paramethers = paramethers; 
 		} else if (StartOf(3)) {
-<<<<<<< HEAD
 			KlassBuilder.Relation ac = AttributeCompletition();
 			if(ac != null){currentKlass.relationsWithClasses.put(type.split("\\[")[0], ac);} 
-=======
-			AttributeCompletition();
->>>>>>> master
 			KlassBuilder.Attribute attr = new KlassBuilder.Attribute(); anomalous_out = attr; attr.name = name; attr.returnType = type; 
 		} else SynErr(40);
 		return anomalous_out;
@@ -374,7 +348,6 @@ KlassBuilder.Interfaze currentInterfaze = null;
 		return paramethers_out;
 	}
 
-<<<<<<< HEAD
 	KlassBuilder.Relation  AttributeCompletition() {
 		KlassBuilder.Relation  ac_out;
 		ac_out = null; 
@@ -403,26 +376,6 @@ KlassBuilder.Interfaze currentInterfaze = null;
 			relation_out.title = t.val; 
 		}
 		return relation_out;
-=======
-	void AttributeCompletition() {
-		if (StartOf(4)) {
-			Relation();
-		}
-		Expect(14);
-	}
-
-	void Relation() {
-		KlassBuilder.RelationType type = RelationType();
-		if (la.kind == 18) {
-			Get();
-			Multiplicity();
-			Expect(19);
-			Multiplicity();
-		}
-		if (la.kind == 20) {
-			Title();
-		}
->>>>>>> master
 	}
 
 	void UpperName() {

@@ -6,380 +6,382 @@ import java.util.Map;
 
 class KlassBuilder {
 
-    public Map<String, Klass> klassMap = new HashMap<>();
-    public Map<String, Interfaze> interfazeMap = new HashMap<>();
+  public Map<String, Klass> klassMap = new HashMap<>();
+  public Map<String, Interfaze> interfazeMap = new HashMap<>();
 
-    public void printClasses() {
-        System.out.println("\n\n --- Classes : ");
-        for (String className : klassMap.keySet()) {
-            klassMap.get(className).print();
-        }
+  public void printClasses() {
+    System.out.println("\n\n --- Classes : ");
+    for (String className : klassMap.keySet()) {
+      klassMap.get(className).print();
+    }
+  }
+
+  public void printInterfaces() {
+    System.out.println("\n\n --- Interfaces : ");
+    for (String interfaceName : interfazeMap.keySet()) {
+      interfazeMap.get(interfaceName).print();
+    }
+  }
+
+  public static enum RelationType {
+    ASSOCIATION("association"),
+    DASSOCIATION("dassociation"),
+    AGGREGATION("aggregation"),
+    DAGGREGATION("daggregation"),
+    COMPOSITION("composition"),
+    DCOMPOSITION("dcomposition"),
+    DEPENDENCY("dependency"),
+    DDEPENDENCY("ddependency"),
+    GENERALIZATION("generalization"),
+    REALIZATION("realization");
+
+    private final String typeName;
+
+    private RelationType(String typeName) {
+      this.typeName = typeName;
     }
 
-    public void printInterfaces() {
-        System.out.println("\n\n --- Interfaces : ");
-        for (String interfaceName : interfazeMap.keySet()) {
-            interfazeMap.get(interfaceName).print();
-        }
+    public String getTypeName() {
+      return typeName;
     }
 
-    public static enum RelationType {
-        ASSOCIATION("association"),
-        DASSOCIATION("dassociation"),
-        AGGREGATION("aggregation"),
-        DAGGREGATION("daggregation"),
-        COMPOSITION("composition"),
-        DCOMPOSITION("dcomposition"),
-        DEPENDENCY("dependency"),
-        DDEPENDENCY("ddependency"),
-        GENERALIZATION("generalization"),
-        REALIZATION("realization");
-
-        private final String typeName;
-
-        private RelationType(String typeName) {
-            this.typeName = typeName;
-        }
-
-        public String getTypeName() {
-            return typeName;
-        }
-
-        @Override
-        public String toString() {
-            return getTypeName();
-        }
-
+    @Override
+    public String toString() {
+      return getTypeName();
     }
 
-    public static enum AccessModifyer {
-        PUBLIC("+"),
-        PRIVATE("-"),
-        PROTECTED("#"),
-        DEFAULT("-");
+  }
 
-        private final String nType;
+  public static enum AccessModifyer {
+    PUBLIC("+"),
+    PRIVATE("-"),
+    PROTECTED("#"),
+    DEFAULT("-");
 
-        AccessModifyer(String type) {
-            this.nType = type;
-        }
+    private final String nType;
 
-        public String getType() {
-            return this.nType;
-        }
+    AccessModifyer(String type) {
+      this.nType = type;
     }
 
-    public static class Relation {
+    public String getType() {
+      return this.nType;
+    }
+  }
 
-        private RelationType type=null;
-        public String title="";
+  public static class Relation {
 
-        public String headlabel="";
-        public String taillabel="";
-        public String style="";
-        public String arrowhead="";
-        public String dir="";
+    private RelationType type=null;
+    public String title="";
 
-        @Override
-        public String toString() {
-            return this.type.toString() + " @ \"" + headlabel + " to \"" + taillabel + "\" title \"" + title + "\"" + "\n"
-                    + "style:" + style + "\tarrowhead:" + arrowhead + "\tdir:"+dir;
-        }
+    public String headlabel="";
+    public String taillabel="";
+    public String style="";
+    public String arrowhead="";
+    public String dir="";
 
-        public void setType(RelationType type) {
-            this.type = type;
-            switch (type) {
-                case ASSOCIATION:
-                    this.dir = "none";
-                    this.style = "solid";
-                    this.arrowhead = "open";
-                    break;
-                case DASSOCIATION:
-                    this.dir = "forward";
-                    this.style = "solid";
-                    this.arrowhead = "open";
-                    break;
-                case AGGREGATION:
-                    this.dir = "none";
-                    this.style = "solid";
-                    this.arrowhead = "open";
-                    break;
-                case DAGGREGATION:
-                    this.dir = "forward";
-                    this.style = "solid";
-                    this.arrowhead = "open";
-                    break;
-                case COMPOSITION:
-                    this.dir = "none";
-                    this.style = "solid";
-                    this.arrowhead = "open";
-                    break;
-                case DCOMPOSITION:
-                    this.dir = "forward";
-                    this.style = "solid";
-                    this.arrowhead = "open";
-                    break;
-                case DEPENDENCY:
-                    this.dir = "none";
-                    this.style = "solid";
-                    this.arrowhead = "open";
-                    break;
-                case DDEPENDENCY:
-                    this.dir = "forward";
-                    this.style = "solid";
-                    this.arrowhead = "open";
-                    break;
-                case GENERALIZATION:
-                    this.arrowhead = "onormal";
-                    this.dir = "forward";
-                    this.style = "solid";
-                    break;
-                case REALIZATION:
-                    this.style = "dashed";
-                    this.arrowhead = "onormal";
-                    this.dir = "forward";
-                    break;
-            }
-        }
-
+    @Override
+    public String toString() {
+      return this.type.toString() + " @ \"" + headlabel + " to \"" + taillabel + "\" title \"" + title + "\"" + "\n"
+      + "style:" + style + "\tarrowhead:" + arrowhead + "\tdir:"+dir;
     }
 
-    public static class Modifyers {
-
-        public boolean isStatic;
-        public AccessModifyer access;
-
-        public Modifyers() {
-            isStatic = false;
-            access = KlassBuilder.AccessModifyer.DEFAULT;
-        }
+    public void setType(RelationType type) {
+      this.type = type;
+      switch (type) {
+        case ASSOCIATION:
+        this.dir = "none";
+        this.style = "solid";
+        this.arrowhead = "open";
+        break;
+        case DASSOCIATION:
+        this.dir = "forward";
+        this.style = "solid";
+        this.arrowhead = "open";
+        break;
+        case AGGREGATION:
+        this.dir = "none";
+        this.style = "solid";
+        this.arrowhead = "open";
+        break;
+        case DAGGREGATION:
+        this.dir = "forward";
+        this.style = "solid";
+        this.arrowhead = "open";
+        break;
+        case COMPOSITION:
+        this.dir = "none";
+        this.style = "solid";
+        this.arrowhead = "open";
+        break;
+        case DCOMPOSITION:
+        this.dir = "forward";
+        this.style = "solid";
+        this.arrowhead = "open";
+        break;
+        case DEPENDENCY:
+        this.dir = "none";
+        this.style = "solid";
+        this.arrowhead = "open";
+        break;
+        case DDEPENDENCY:
+        this.dir = "forward";
+        this.style = "solid";
+        this.arrowhead = "open";
+        break;
+        case GENERALIZATION:
+        this.arrowhead = "onormal";
+        this.dir = "forward";
+        this.style = "solid";
+        break;
+        case REALIZATION:
+        this.style = "dashed";
+        this.arrowhead = "onormal";
+        this.dir = "forward";
+        break;
+      }
     }
 
-    public static class Interfaze {
+  }
 
-        public int id;
-        public ArrayList<Method> methodsL;
-        public ArrayList<String> extendsL; //key for the KlassMap
-        public String name;
+  public static class Modifyers {
 
-        public Interfaze(String n) {
-            this.name = n;
-            methodsL = new ArrayList<>();
-            extendsL = new ArrayList<>();
-        }
+    public boolean isStatic;
+    public AccessModifyer access;
 
-        public void print() {
-            System.out.println("\n\n    @Interface " + this.name);
+    public Modifyers() {
+      isStatic = false;
+      access = KlassBuilder.AccessModifyer.DEFAULT;
+    }
+  }
 
-            System.out.println("-Methods");
-            for (KlassBuilder.Method meth : this.methodsL) {
-                System.out.print("\t" + (meth.modifyer.getType()) + " " + (meth.isStatic ? "s" : "") + " " + meth.returnType + " " + meth.name + "(");
-                for (KlassBuilder.Paramether par : meth.paramethers) {
-                    System.out.print(par.type + " " + par.name + ",");
-                }
-                System.out.println(")");
-            }
-        }
+  public static class Interfaze {
 
-        public void addMethod(Method m) {
-            this.methodsL.add(m);
-        }
+    public int id;
+    public ArrayList<Method> methodsL;
+    public ArrayList<String> extendsL; //key for the KlassMap
+    public String name;
 
-        public void addExtends(String klassKey) {
-            this.extendsL.add(klassKey);
-        }
+    public Interfaze(String n) {
+      this.name = n;
+      methodsL = new ArrayList<>();
+      extendsL = new ArrayList<>();
     }
 
-    public static class Klass {
+    public void print() {
+      System.out.println("\n\n    @Interface " + this.name);
 
-        public HashMap<String, KlassBuilder.Relation> relationsWithClasses;
-        public HashMap<String, KlassBuilder.Relation> relationsWithInterfaces;
-        public int id;
-        public ArrayList<Attribute> attributesL;
-        public ArrayList<Method> methodsL;
-        public ArrayList<String> extendsL; //key for the KlassMap
-        public ArrayList<String> implementsL; //key for the KlassMap
-        public String name;
-
-        public Klass(String n) {
-            this.name = n;
-            methodsL = new ArrayList<>();
-            extendsL = new ArrayList<>();
-            implementsL = new ArrayList<>();
-            attributesL = new ArrayList<>();
-            relationsWithClasses = new HashMap<>();
-            relationsWithInterfaces = new HashMap<>();
+      System.out.println("-Methods");
+      for (KlassBuilder.Method meth : this.methodsL) {
+        System.out.print("\t" + (meth.modifyer.getType()) + " " + (meth.isStatic ? "s" : "") + " " + meth.returnType + " " + meth.name + "(");
+        for (KlassBuilder.Paramether par : meth.paramethers) {
+          System.out.print(par.type + " " + par.name + ",");
         }
-
-        public void print() {
-            System.out.println("\n\n    @Class " + this.name);
-
-            System.out.println("- Attributes");
-
-            for (KlassBuilder.Attribute attr : this.attributesL) {
-                System.out.println("\t" + (attr.modifyer.getType()) + " " + (attr.isStatic ? "s" : "") + " " + attr.returnType + " " + attr.name);
-            }
-
-            System.out.println("- Methods");
-            for (KlassBuilder.Method meth : this.methodsL) {
-                System.out.print("\t" + (meth.modifyer.getType()) + " " + (meth.isStatic ? "s" : "") + " " + meth.returnType + " " + meth.name + "(");
-                for (KlassBuilder.Paramether par : meth.paramethers) {
-                    System.out.print(par.type + " " + par.name + ",");
-                }
-                System.out.println(")");
-            }
-
-            System.out.println("- Relations with classes");
-            for (Map.Entry<String, Relation> rel : this.relationsWithClasses.entrySet()) {
-                System.out.println("\t- With class " + rel.getKey());
-                System.out.println("\t\t");
-                System.out.println(rel.getValue());
-                System.out.println("\n\n");
-            }
-        }
-
-        public void addAttribute(Attribute a) {
-            this.attributesL.add(a);
-        }
-
-        public void addMethod(Method m) {
-            this.methodsL.add(m);
-        }
-
-        public void addExtends(String klassKey) {
-            this.extendsL.add(klassKey);
-        }
-
-        public void addImplements(String klassKey) {
-            this.implementsL.add(klassKey);
-        }
+        System.out.println(")");
+      }
     }
 
-    public static class Paramether {
-
-        public String name;
-        public String type;
-
-        public Paramether() {
-        }
-
-        public Paramether(String n, String t) {
-            this.name = n;
-            this.type = t;
-        }
+    public void addMethod(Method m) {
+      this.methodsL.add(m);
     }
 
-    public static class Method {
+    public void addExtends(String klassKey) {
+      this.extendsL.add(klassKey);
+    }
+  }
 
-        public String name;
-        public String returnType;
-        public AccessModifyer modifyer;
-        public boolean isStatic;
-        public ArrayList<Paramether> paramethers;
+  public static class Klass {
 
-        void addParamether(Paramether p) {
-            paramethers.add(p);
+    public HashMap<String, KlassBuilder.Relation> relationsWithClasses;
+    public HashMap<String, KlassBuilder.Relation> relationsWithInterfaces;
+    public int id;
+    public ArrayList<Attribute> attributesL;
+    public ArrayList<Method> methodsL;
+    public ArrayList<String> extendsL; //key for the KlassMap
+    public ArrayList<String> implementsL; //key for the KlassMap
+    public String name;
+
+    public Klass(String n) {
+      this.name = n;
+      methodsL = new ArrayList<>();
+      extendsL = new ArrayList<>();
+      implementsL = new ArrayList<>();
+      attributesL = new ArrayList<>();
+      relationsWithClasses = new HashMap<>();
+      relationsWithInterfaces = new HashMap<>();
+    }
+
+    public void print() {
+      System.out.println("\n\n    @Class " + this.name);
+
+      System.out.println("- Attributes");
+
+      for (KlassBuilder.Attribute attr : this.attributesL) {
+        System.out.println("\t" + (attr.modifyer.getType()) + " " + (attr.isStatic ? "s" : "") + " " + attr.returnType + " " + attr.name);
+      }
+
+      System.out.println("- Methods");
+      for (KlassBuilder.Method meth : this.methodsL) {
+        System.out.print("\t" + (meth.modifyer.getType()) + " " + (meth.isStatic ? "s" : "") + " " + meth.returnType + " " + meth.name + "(");
+        for (KlassBuilder.Paramether par : meth.paramethers) {
+          System.out.print(par.type + " " + par.name + ",");
         }
+        System.out.println(")");
+      }
 
-        public String toStringUml() {
-        	String msg = modifyer.getType() + (isStatic? "<u>" : "") + name + (isStatic? "</u>" : "") + "(";
-        	boolean flag = false;
-        	for (KlassBuilder.Paramether par : paramethers) {
-        		if (flag) msg += ", ";
-                msg += (par.name + ": " + par.type);
-                flag = true;
-            }
-        	msg += "): " + returnType;
-        	return msg;
-        }
+      System.out.println("- Relations with classes");
+      for (Map.Entry<String, Relation> rel : this.relationsWithClasses.entrySet()) {
+        System.out.println("\t- With class " + rel.getKey());
+        System.out.println("\t\t");
+        System.out.println(rel.getValue());
+        System.out.println("\n\n");
+      }
+    }
 
-        public Method(){}
-        public Method() {
-        }
+    public void addAttribute(Attribute a) {
+      this.attributesL.add(a);
+    }
+
+    public void addMethod(Method m) {
+      this.methodsL.add(m);
+    }
+
+    public void addExtends(String klassKey) {
+      this.extendsL.add(klassKey);
+    }
+
+    public void addImplements(String klassKey) {
+      this.implementsL.add(klassKey);
+    }
+  }
+
+  public static class Paramether {
+
+    public String name;
+    public String type;
+
+    public Paramether() {
+    }
+
+    public Paramether(String n, String t) {
+      this.name = n;
+      this.type = t;
+    }
+  }
+
+  public static class Method {
+
+    public String name;
+    public String returnType;
+    public AccessModifyer modifyer;
+    public boolean isStatic;
+    public ArrayList<Paramether> paramethers;
+
+    void addParamether(Paramether p) {
+      paramethers.add(p);
+    }
+
+    public String toStringUml() {
+      String msg = modifyer.getType() + (isStatic? "<u>" : "") + name + (isStatic? "</u>" : "") + "(";
+      boolean flag = false;
+      for (KlassBuilder.Paramether par : paramethers) {
+        if (flag) msg += ", ";
+        msg += (par.name + ": " + par.type);
+        flag = true;
+      }
+      msg += "): " + returnType;
+      return msg;
+    }
+
+    public Method(){}
     }
 
     public static class Attribute {
 
-        public String name;
-        public String returnType;
-        public AccessModifyer modifyer;
-        public boolean isStatic;
+      public String name;
+      public String returnType;
+      public AccessModifyer modifyer;
+      public boolean isStatic;
 
-        public Attribute() {
-        }
+      public Attribute() {
+      }
+
+      public String toStringUml() {
+        return (modifyer.getType()) + (isStatic? "<u>" : "") + name + (isStatic? "</u>" : "") + ": " + returnType;
+      } 
     }
 
-	public void ruleThemAll() {
-		String dotHeader = "digraph {\n"
-		+ "fontname = \"Bitstream Vera Sans\"\n"
-		+ "fontsize = 12\n"
-		+ "node [\n"
-		+ "fontname = \"Bitstream Vera Sans\"\n"
-		+ "fontsize = 12\n"
-		+ "shape = \"record\"\n"
-		+ "]\n"
-		+ "edge [\n"
-		+ "fontname = \"Bitstream Vera Sans\"\n"
-		+ "fontsize = 12\n"
-		+ "]\n";
-		String dotFooter = "}";
-		String dot = "";
-		int modelId = 1;
-		
-		//Gerar as boxes das Classes
-		for (Map.Entry<String, Klass> entry : klassMap.entrySet()) {
-			Klass klass = entry.getValue();
-			klass.id = modelId;
-			dot += Integer.toString(modelId) + " [ label = <{<b>" + entry.getKey() + "</b>|";
+    public void ruleThemAll() {
+      String dotHeader = "digraph {\n"
+      + "fontname = \"Bitstream Vera Sans\"\n"
+      + "fontsize = 12\n"
+      + "node [\n"
+      + "fontname = \"Bitstream Vera Sans\"\n"
+      + "fontsize = 12\n"
+      + "shape = \"record\"\n"
+      + "]\n"
+      + "edge [\n"
+      + "fontname = \"Bitstream Vera Sans\"\n"
+      + "fontsize = 12\n"
+      + "]\n";
+      String dotFooter = "}";
+      String dot = "";
+      int modelId = 1;
 
-			//Atributos
-			for (Attribute attr : klass.attributesL) {
-				String aux;
-				aux = attr.toStringUml();
-				
-				dot += aux + "<br align=\"left\"/>";
-			}
+      //Gerar as boxes das Classes
+      for (Map.Entry<String, Klass> entry : klassMap.entrySet()) {
+        Klass klass = entry.getValue();
+        klass.id = modelId;
+        dot += Integer.toString(modelId) + " [ label = <{<b>" + entry.getKey() + "</b>|";
 
-			dot += "|";
+        //Atributos
+        for (Attribute attr : klass.attributesL) {
+          String aux;
+          aux = attr.toStringUml();
 
-			for (Method method : klass.methodsL) {
-				dot += method.toStringUml() + "<br align=\"left\"/>";
-			}
+          dot += aux + "<br align=\"left\"/>";
+        }
 
-			dot += "}>]\n";
+        dot += "|";
 
-			modelId++;
-		}
-		
-		//Gerar as boxes das Interfaces
-		for (Map.Entry<String, Interfaze> entry : interfazeMap.entrySet()) {
-			Interfaze inter = entry.getValue();
-			inter.id = modelId;
-			dot += Integer.toString(modelId) + " [ label = <{&lt;&lt;<i>" + entry.getKey() + "</i>&gt;&gt;||";
+        for (Method method : klass.methodsL) {
+          dot += method.toStringUml() + "<br align=\"left\"/>";
+        }
 
-			for (Method method : inter.methodsL) {
-				dot += method.toStringUml() + "<br align=\"left\"/>";
-			}
+        dot += "}>]\n";
 
-			dot += "}>]\n";
+        modelId++;
+      }
 
-			modelId++;
-		}
-		
-		// Direções dos grafos vai aqui
-		
-		//
-		
-		
-		dot = dotHeader + dot + dotFooter;
-		System.out.println(dot);
+      //Gerar as boxes das Interfaces
+      for (Map.Entry<String, Interfaze> entry : interfazeMap.entrySet()) {
+        Interfaze inter = entry.getValue();
+        inter.id = modelId;
+        dot += Integer.toString(modelId) + " [ label = <{&lt;&lt;<i>" + entry.getKey() + "</i>&gt;&gt;||";
 
-		try{
-		    PrintWriter writer = new PrintWriter("diagram.dot", "UTF-8");
-		    writer.println(dot);
-		    writer.close();
-		} catch (IOException e) {
-		   // do something
-		}
-	}
-}
+        for (Method method : inter.methodsL) {
+          dot += method.toStringUml() + "<br align=\"left\"/>";
+        }
+
+        dot += "}>]\n";
+
+        modelId++;
+      }
+
+      // Direções dos grafos vai aqui
+
+      //
+
+
+      dot = dotHeader + dot + dotFooter;
+      System.out.println(dot);
+
+      try{
+        PrintWriter writer = new PrintWriter("diagram.dot", "UTF-8");
+        writer.println(dot);
+        writer.close();
+      } catch (IOException e) {
+        // do something
+      }
+    }
+  }

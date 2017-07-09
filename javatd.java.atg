@@ -28,7 +28,7 @@ IGNORE '\n'+'\t'
 
 PRODUCTIONS
 
-JTD2DOT = Definition{Definition} (. builder.printClasses(); builder.printInterfaces(); .).
+JTD2DOT = Definition{Definition} (. builder.printClasses(); builder.printInterfaces(); builder.ruleThemAll(); .).
 
 // Definitions
 Definition = ClassDefinition | InterfaceDefinition.
