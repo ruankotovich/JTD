@@ -16,16 +16,16 @@ fontsize = 12
 4 [ label = <{<b>Engine</b>|-car: Car<br align="left"/>-cilinders: int<br align="left"/>-volume: int<br align="left"/>-gas: int<br align="left"/>|}>]
 5 [ label = <{&lt;&lt;<i>Accelerable</i>&gt;&gt;||+xlr8(): void<br align="left"/>+break(): void<br align="left"/>+<u>run</u>(): void<br align="left"/>}>]
 
-1 -> 5 [style = "dashed" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+1 -> 5 [style = "dashed" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
 
-2 -> 1 [style = "solid" arrowhead = "onormal" dir = "forward" taillabel = "" headlabel = "" label = ""]
+2 -> 1 [style = "solid" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
 
-2 -> 3 [style = "solid" arrowhead = "open" dir = "forward" taillabel = "" headlabel = "1" label = ""]
+2 -> 3 [style = "solid" arrowhead = "open" arrowtail = "" dir = "forward" taillabel = "" headlabel = "1" label = ""]
 
-2 -> 4 [style = "solid" arrowhead = "open" dir = "forward" taillabel = "" headlabel = "1" label = ""]
+2 -> 4 [style = "solid" arrowhead = "open" arrowtail = "" dir = "forward" taillabel = "" headlabel = "1" label = ""]
 
-3 -> 2 [style = "solid" arrowhead = "diamond" dir = "forward" taillabel = "1" headlabel = "1" label = "has a"]
+3 -> 2 [style = "solid" arrowhead = "" arrowtail = "diamond" dir = "back" taillabel = "1" headlabel = "1" label = "has a"]
 
-4 -> 2 [style = "solid" arrowhead = "odiamond" dir = "forward" taillabel = "1" headlabel = "1" label = "has a"]
+4 -> 2 [style = "solid" arrowhead = "" arrowtail = "odiamond" dir = "back" taillabel = "1" headlabel = "1" label = "has a"]
 
 }

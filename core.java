@@ -110,43 +110,6 @@ class KlassBuilder {
             relationsFrom.put(toName, rel);
         }
         return true;
-
-//        if (relationFromTo != null) { // there's a relation from to
-//
-//            if (!relationFromTo.explicit && relationFromTo.getType().getWeight() < rel.getType().getWeight()) {
-//                relationsFrom.remove(toName); // the relation here was weaker than this one
-//            } else {
-//                return false; //there's a relation explicit here
-//            }
-//
-//            if (relationToFrom != null) { // there's a relation to from
-//
-//                if (!relationToFrom.explicit && relationToFrom.getType().weight < rel.getType().getWeight()) {
-//                    relationsTo.remove(fromName); // the relation to from was weaker than this one
-//                    relationsFrom.put(toName, rel);
-//                    return true;
-//                }
-//                return false;
-//
-//            } else { // theresn't a relation from to
-//                relationsFrom.put(toName, rel); // the previous relation was weaker than this;
-//                return true;
-//            }
-//
-//        } else { // theresn't a relation from to
-//            if (relationToFrom != null) { // there's a relation from to
-//                if (!relationToFrom.explicit && relationToFrom.getType().weight < rel.getType().getWeight()) {
-//                    relationsTo.remove(fromName); // the relation to from was weaker than this one
-//                    relationsFrom.put(toName, rel);
-//                    return true;
-//                }
-//
-//                return false;
-//            } else { // theresn't a relation to from
-//                relationsFrom.put(toName, rel); // the previous relation was weaker than this;
-//                return true;
-//            }
-//        }
     }
 
     public void printClasses() {
@@ -227,18 +190,19 @@ class KlassBuilder {
         public String taillabel = "";
         public String style = "";
         public String arrowhead = "";
+        public String arrowtail = "";
         public String dir = "";
 
         @Override
         public String toString() {
             return this.type.toString() + " @ \"" + headlabel + " to \"" + taillabel + "\" title \"" + title + "\"" + "\n"
-                    + "style:" + style + "\tarrowhead:" + arrowhead + "\tdir:" + dir;
+                    + "style:" + style + "\tarrowhead:" + arrowhead + "\tarrowtail:" + arrowtail + "\tdir:" + dir;
         }
 
         public String toStringUml() {
-        	return "[style = \"" + style + "\" arrowhead = \"" + arrowhead +  "\" dir = \"" + dir + "\" taillabel = \"" + 
-        			(taillabel.replaceAll("\"", ""))
-        			+ "\" headlabel = \""	+ (headlabel.replaceAll("\"",  "")) + "\" label = \"" + (title.replaceAll("\"", "")) + "\"]";
+            return "[style = \"" + style + "\" arrowhead = \"" + arrowhead + "\" arrowtail = \"" + arrowtail + "\" dir = \"" + dir + "\" taillabel = \""
+                    + (taillabel.replaceAll("\"", ""))
+                    + "\" headlabel = \"" + (headlabel.replaceAll("\"", "")) + "\" label = \"" + (title.replaceAll("\"", "")) + "\"]";
         }
 
         public RelationType getType() {
@@ -259,24 +223,24 @@ class KlassBuilder {
                     this.arrowhead = "open";
                     break;
                 case AGGREGATION:
-                    this.dir = "none";
+                    this.dir = "back";
                     this.style = "solid";
-                    this.arrowhead = "odiamond";
+                    this.arrowtail = "odiamond";
                     break;
                 case DAGGREGATION:
-                    this.dir = "forward";
+                    this.dir = "back";
                     this.style = "solid";
-                    this.arrowhead = "odiamond";
+                    this.arrowtail = "odiamond";
                     break;
                 case COMPOSITION:
-                    this.dir = "none";
+                    this.dir = "back";
                     this.style = "solid";
-                    this.arrowhead = "diamond";
+                    this.arrowtail = "diamond";
                     break;
                 case DCOMPOSITION:
-                    this.dir = "forward";
+                    this.dir = "back";
                     this.style = "solid";
-                    this.arrowhead = "diamond";
+                    this.arrowtail = "diamond";
                     break;
                 case DEPENDENCY:
                     this.dir = "none";
@@ -379,48 +343,48 @@ class KlassBuilder {
         }
 
         public void inferenceRelationsInterfaze(KlassBuilder builder) {
-        	//Métodos
-        	String name;
+            //Métodos
+            String name;
             for (Method method : methodsL) {
-            	name = KlassBuilder.recoverEntityName(method.returnType);
-            	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
-            	  if (builder.klassMap.containsKey(name)) {
-            		Relation r = new Relation();
-            		r.setType(RelationType.DDEPENDENCY);
-            		r.explicit = false;
-            		
-            		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
-            	  }
-            	  if (builder.interfazeMap.containsKey(name)) {
-            		Relation r = new Relation();
-            		r.setType(RelationType.DDEPENDENCY);
-            		r.explicit = false;
-            		
-            		builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
-            		//ADicionar
-            	  }
-            	}
-              
-              for (Paramether p : method.paramethers) {
-            	  name = KlassBuilder.recoverEntityName(p.type);
-              	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
-              	  if (builder.klassMap.containsKey(name)) {
-              		Relation r = new Relation();
-              		r.setType(RelationType.DDEPENDENCY);
-              		r.explicit = false;
-              		
-              		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
-              	  }
-              	  
-              	  if (builder.interfazeMap.containsKey(name)) {
-              		Relation r = new Relation();
-              		r.setType(RelationType.DDEPENDENCY);
-              		r.explicit = false;
-              		
-              		builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
-              	  }
-              	}
-              }
+                name = KlassBuilder.recoverEntityName(method.returnType);
+                if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+                    if (builder.klassMap.containsKey(name)) {
+                        Relation r = new Relation();
+                        r.setType(RelationType.DDEPENDENCY);
+                        r.explicit = false;
+
+                        builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
+                    }
+                    if (builder.interfazeMap.containsKey(name)) {
+                        Relation r = new Relation();
+                        r.setType(RelationType.DDEPENDENCY);
+                        r.explicit = false;
+
+                        builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
+                        //ADicionar
+                    }
+                }
+
+                for (Paramether p : method.paramethers) {
+                    name = KlassBuilder.recoverEntityName(p.type);
+                    if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+                        if (builder.klassMap.containsKey(name)) {
+                            Relation r = new Relation();
+                            r.setType(RelationType.DDEPENDENCY);
+                            r.explicit = false;
+
+                            builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
+                        }
+
+                        if (builder.interfazeMap.containsKey(name)) {
+                            Relation r = new Relation();
+                            r.setType(RelationType.DDEPENDENCY);
+                            r.explicit = false;
+
+                            builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
+                        }
+                    }
+                }
             }
         }
     }
@@ -447,68 +411,69 @@ class KlassBuilder {
         }
 
         public void inferenceRelationsKlass(KlassBuilder builder) {
-        	String name;
-        	//Atributos
-        	for (Attribute attr : attributesL) {
-        		name = KlassBuilder.recoverEntityName(attr.returnType);
-        		
-        		if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
-              	  if (builder.klassMap.containsKey(name)) {
-              		Relation r = new Relation();
-              		r.setType(RelationType.DASSOCIATION);
-              		r.explicit = false;
-              		
-              		if (KlassBuilder.isCollection(attr.returnType)) {
-              			r.headlabel = "0..*";
-              		}
-              		else r.headlabel = "1";
-              		
-              		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
-              	  }
-              	}
-        	}
-        	
-        	//Métodos
+            String name;
+            //Atributos
+            for (Attribute attr : attributesL) {
+                name = KlassBuilder.recoverEntityName(attr.returnType);
+
+                if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+                    if (builder.klassMap.containsKey(name)) {
+                        Relation r = new Relation();
+                        r.setType(RelationType.DASSOCIATION);
+                        r.explicit = false;
+
+                        if (KlassBuilder.isCollection(attr.returnType)) {
+                            r.headlabel = "0..*";
+                        } else {
+                            r.headlabel = "1";
+                        }
+
+                        builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
+                    }
+                }
+            }
+
+            //Métodos
             for (Method method : methodsL) {
-            	name = KlassBuilder.recoverEntityName(method.returnType);
-            	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
-            	  if (builder.klassMap.containsKey(name)) {
-            		Relation r = new Relation();
-            		r.setType(RelationType.DDEPENDENCY);
-            		r.explicit = false;
-            		
-            		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
-            	  }
-            	  
-            	  if (builder.interfazeMap.containsKey(name)) {
-            		Relation r = new Relation();
-            		r.setType(RelationType.DDEPENDENCY);
-            		r.explicit = false;
-            		
-            		builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
-            	  }
-            	}
-              
-              for (Paramether p : method.paramethers) {
-            	  name = KlassBuilder.recoverEntityName(p.type);
-              	if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
-              	  if (builder.klassMap.containsKey(name)) {
-              		Relation r = new Relation();
-              		r.setType(RelationType.DDEPENDENCY);
-              		r.explicit = false;
-              		
-              		builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
-              	  }
-              	  
-              	  if (builder.interfazeMap.containsKey(name)) {
-              		Relation r = new Relation();
-              		r.setType(RelationType.DDEPENDENCY);
-              		r.explicit = false;
-              		
-              		builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
-              	  }
-              	}
-              }
+                name = KlassBuilder.recoverEntityName(method.returnType);
+                if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+                    if (builder.klassMap.containsKey(name)) {
+                        Relation r = new Relation();
+                        r.setType(RelationType.DDEPENDENCY);
+                        r.explicit = false;
+
+                        builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
+                    }
+
+                    if (builder.interfazeMap.containsKey(name)) {
+                        Relation r = new Relation();
+                        r.setType(RelationType.DDEPENDENCY);
+                        r.explicit = false;
+
+                        builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
+                    }
+                }
+
+                for (Paramether p : method.paramethers) {
+                    name = KlassBuilder.recoverEntityName(p.type);
+                    if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
+                        if (builder.klassMap.containsKey(name)) {
+                            Relation r = new Relation();
+                            r.setType(RelationType.DDEPENDENCY);
+                            r.explicit = false;
+
+                            builder.replaceIfMoreImportant(this, builder.klassMap.get(name), r);
+                        }
+
+                        if (builder.interfazeMap.containsKey(name)) {
+                            Relation r = new Relation();
+                            r.setType(RelationType.DDEPENDENCY);
+                            r.explicit = false;
+
+                            builder.replaceIfMoreImportant(this, builder.interfazeMap.get(name), r);
+                        }
+                    }
+                }
             }
         }
 
@@ -667,7 +632,7 @@ class KlassBuilder {
             }
 
             dot += "}>]\n";
-            
+
             // PROCESSAR AS RELAÇÕES INFERENCIADAS
             klass.inferenceRelationsKlass(this);
 
@@ -693,29 +658,28 @@ class KlassBuilder {
         }
 
         // Direções dos grafos vai aqui
-        
         for (Map.Entry<String, Klass> entry : klassMap.entrySet()) {
-        	for (Map.Entry<String, Relation> klassRelation: entry.getValue().relationsWithClasses.entrySet()) {
-        		dot += entry.getValue().id + " -> " + klassMap.get(klassRelation.getKey()).id + " " + 
-        				klassRelation.getValue().toStringUml() + "\n\n";
-        	}
-        	for (Map.Entry<String, Relation> klassInterfaces: entry.getValue().relationsWithInterfaces.entrySet()) {
-        		dot += entry.getValue().id + " -> " + interfazeMap.get(klassInterfaces.getKey()).id + " " + 
-        				klassInterfaces.getValue().toStringUml() + "\n\n";
-        	}
+            for (Map.Entry<String, Relation> klassRelation : entry.getValue().relationsWithClasses.entrySet()) {
+                dot += entry.getValue().id + " -> " + klassMap.get(klassRelation.getKey()).id + " "
+                        + klassRelation.getValue().toStringUml() + "\n\n";
+            }
+            for (Map.Entry<String, Relation> klassInterfaces : entry.getValue().relationsWithInterfaces.entrySet()) {
+                dot += entry.getValue().id + " -> " + interfazeMap.get(klassInterfaces.getKey()).id + " "
+                        + klassInterfaces.getValue().toStringUml() + "\n\n";
+            }
         }
-        
+
         for (Map.Entry<String, Interfaze> entry : interfazeMap.entrySet()) {
-        	for (Map.Entry<String, Relation> klassRelation: entry.getValue().relationsWithClasses.entrySet()) {
-        		dot += entry.getValue().id + " -> " + klassMap.get(klassRelation.getKey()).id + " " + 
-        				klassRelation.getValue().toStringUml() + "\n\n";
-        	}
-        	for (Map.Entry<String, Relation> klassInterfaces: entry.getValue().relationsWithInterfaces.entrySet()) {
-        		dot += entry.getValue().id + " -> " + interfazeMap.get(klassInterfaces.getKey()).id + " " + 
-        				klassInterfaces.getValue().toStringUml() + "\n\n";
-        	}
+            for (Map.Entry<String, Relation> klassRelation : entry.getValue().relationsWithClasses.entrySet()) {
+                dot += entry.getValue().id + " -> " + klassMap.get(klassRelation.getKey()).id + " "
+                        + klassRelation.getValue().toStringUml() + "\n\n";
+            }
+            for (Map.Entry<String, Relation> klassInterfaces : entry.getValue().relationsWithInterfaces.entrySet()) {
+                dot += entry.getValue().id + " -> " + interfazeMap.get(klassInterfaces.getKey()).id + " "
+                        + klassInterfaces.getValue().toStringUml() + "\n\n";
+            }
         }
-        
+
         //
         dot = dotHeader + dot + dotFooter;
         System.out.println(dot);
