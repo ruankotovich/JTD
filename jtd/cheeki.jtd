@@ -5,13 +5,15 @@ interface Breeki{
   private int damke();
 }
 
-interface Cheeki extends Breeki{
+
+// IV DAMKE!
+interface Cheeki extends Breeki{ // DAMKE
   public int[] vodkas();
 }
 
 class Bandit{
   public Song[] songs;
-  public IDCard idcard composition @ "0..*" to "1" title "has";
+  public IDCard idcard composition @ "1" to "1" title "has";
 }
 
 interface IDCard{}

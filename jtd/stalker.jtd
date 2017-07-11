@@ -1,0 +1,157 @@
+class Map{
+    protected Person[] persons composition @ "1" to "0..*" title "has";
+    protected Monster[] monsters composition @ "1" to "0..*" title "has";
+    protected String name;
+    protected Tile tile;
+}
+
+class Person{
+    protected String name;
+    private int age;
+    Weapon[] weapons;
+  public void eat(){}
+  public void run(){}
+  public void scream(){}
+}
+
+class Bandit extends Person{
+    protected int cheekiCount;
+    protected int breekiCount;
+    public void singCheekiBreeki(){}
+}
+
+class Stalker extends Person{
+    private boolean knowsMarkedOne;
+    public void callStalkers(){}
+}
+
+class Lonely extends Person{
+    private boolean hasFearOfFire;
+    public void cry(){}
+}
+
+class Duty extends Stalker{
+    private boolean hatesFreedom;
+    public void singAnthem(){}
+}
+
+class Freedom extends Stalker{
+    private boolean hatesDuty;
+    public void laught(){}
+}
+
+class Monolith extends Person{
+    private boolean mindControlled;
+    private Person controlled dassociation @ "0..*" to "1" title "controls";
+    public void control(Person person){}
+}
+
+class Monster{
+    private int hp;
+    private int attack;
+    private int regeneration;
+    public void attack(Person person){}
+}
+
+class Type {
+    private String name;
+}
+
+interface Shootable{
+    public void shoot();
+    public void recharge();
+}
+
+class Weapon implements Shootable{
+    private JPanel owner;
+    private JLabel shower;
+    private int cadence; //shots per 10 seconds
+    private String wpnname; // name
+    private float bph;
+    private int damage; // damage, the default enemy has 100 hp
+    private boolean disponibility; // is finded, in other words
+    private int capacity; // capacity of magazine, ex : 30/90 in ak
+    private int biweapon;
+    private boolean recharging;
+    private int bullets; // disponible bullets
+    private Type type;
+    public static double minRad;
+    public static double maxRad;
+    private String sound;
+    private double angle;
+    private int rechargeTime;
+
+    public String toString() {}
+
+    public JLabel getShower() {}
+
+    public void setShower(JLabel shower) {}
+
+    public int getRechargeTime() {}
+
+    public void setRechargeTime(int rechargeTime) {}
+
+    public boolean isRecharging() {}
+
+    public void setRecharging(boolean recharging) {}
+
+    public double getAngle() {}
+
+    public void setAngle(double angle) {}
+
+    public int getBiweapon() {}
+
+    public void setBiweapon(int biweapon) {}
+
+    public String getSound() {}
+
+    public void setSound(String sound) {}
+
+    public JPanel getOwner() {}
+
+    public void setOwner(JPanel owner) {}
+
+    public void setBph(float bph) {}
+
+    public float getBph() {}
+
+    public Type getType() {}
+
+    public void setType(Type type) {}
+
+    public void changeTo() {}
+
+    public void refreshAtts() {}
+
+    public void setAttributesTo(JLabel label) {}
+
+    public void makeWeapon(Type type) {}
+
+    public void refreshAtts(JLabel label) {}
+
+    public boolean isDisponibility() {}
+
+    public void setDisponibility(boolean disponibility) {}
+
+    public int getCadence() {}
+
+    public void setCadence(int cadence) {}
+
+    public String getWpnname() {}
+
+    public void setWpnname(String wpnname) {}
+
+    public int getDamage() {}
+
+    public void setDamage(int damage) {}
+
+    public int getCapacity() {}
+
+    public void setCapacity(int capacity) {}
+
+    public int getBullets() {}
+
+    public void setBullets(int bullets) {}
+
+    public void paintComponent(Graphics g) {}
+}

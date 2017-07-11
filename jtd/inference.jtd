@@ -2,14 +2,12 @@
  * Inferring relationships
  */
 
-class Room {
-	House house;
-}
+class Room {}
 
 class House {
     Room[] rooms association @ "1" to "  1..*" title " has";
-    /* dependency should not be shown if classes are already
-       strongerly associated with each other */
+    /* dependency should not be shown if classes are already 
+       strongerly associated with each other */ 
     Room largerRoom() {}
 }
 
@@ -23,7 +21,7 @@ class Person {
     House[] houses;
     /* should infer dassociation @ "" to "0..*" (to Dog) */
     Dog[] dogs;
-
+    
     /* should infer ddependency @ "" to "" (to Room) */
     public Room[] getFavRooms(House h) {}
 }

@@ -1,0 +1,17 @@
+class Room{
+protected Door[] doors;
+private Door mainDoor;
+public Door getMainDoor(){}
+}
+
+class Door implements Openable{
+private String color;
+private int width;
+private int height;
+public static void main(String[] args){}
+}
+
+interface Openable{
+public void open();
+public void close();
+}

@@ -1,7 +1,7 @@
 /*
-* Generalisation
-* UML User Guide p. 141
-*/
+ * Generalisation
+ * UML User Guide p. 141
+ */
 
 /* Basic categorisations */
 class Asset {}

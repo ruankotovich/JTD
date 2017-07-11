@@ -13,7 +13,7 @@ class HttpResponseWrapper
 
 class HttpResponseFacade
         extends ResponseFacade
-        implements HttpServletResponse  {}
+        implements HttpServletResponse {}
 
 class ResponseWrapper implements Response {}
 interface HttpResponse extends Response {}
@@ -21,5 +21,5 @@ class ResponseBase implements Response, ServletResponse {}
 interface HttpServletResponse {}
 class ResponseFacade implements ServletResponse {}
 
-interface ServletResponse{}
+interface ServletResponse {}
 interface Response {}

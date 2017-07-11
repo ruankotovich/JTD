@@ -10,22 +10,41 @@ edge [
 fontname = "Bitstream Vera Sans"
 fontsize = 12
 ]
-1 [ label = <{<b>Automobile</b>||}>]
-2 [ label = <{<b>Car</b>|-engine: Engine<br align="left"/>-careen: Careen<br align="left"/>|}>]
-3 [ label = <{<b>Careen</b>|-color: String<br align="left"/>-<u>icon</u>: Icon<br align="left"/>-car: Car<br align="left"/>|}>]
-4 [ label = <{<b>Engine</b>|-car: Car<br align="left"/>-cilinders: int<br align="left"/>-volume: int<br align="left"/>-gas: int<br align="left"/>|}>]
-5 [ label = <{&lt;&lt;<i>Accelerable</i>&gt;&gt;||+xlr8(): void<br align="left"/>+break(): void<br align="left"/>+<u>run</u>(): void<br align="left"/>}>]
+1 [ label = <{<b>Type</b>|-name: String<br align="left"/>|}>]
+2 [ label = <{<b>Duty</b>|-hatesFreedom: boolean<br align="left"/>|+singAnthem(): void<br align="left"/>}>]
+3 [ label = <{<b>Monolith</b>|-mindControlled: boolean<br align="left"/>-controlled: Person<br align="left"/>|+control(person: Person): void<br align="left"/>}>]
+4 [ label = <{<b>Lonely</b>|-hasFearOfFire: boolean<br align="left"/>|+cry(): void<br align="left"/>}>]
+5 [ label = <{<b>Monster</b>|-hp: int<br align="left"/>-attack: int<br align="left"/>-regeneration: int<br align="left"/>|+attack(person: Person): void<br align="left"/>}>]
+6 [ label = <{<b>Bandit</b>|#cheekiCount: int<br align="left"/>#breekiCount: int<br align="left"/>|+singCheekiBreeki(): void<br align="left"/>}>]
+7 [ label = <{<b>Stalker</b>|-knowsMarkedOne: boolean<br align="left"/>|+callStalkers(): void<br align="left"/>}>]
+8 [ label = <{<b>Map</b>|#persons: Person[]<br align="left"/>#monsters: Monster[]<br align="left"/>#name: String<br align="left"/>#tile: Tile<br align="left"/>|}>]
+9 [ label = <{<b>Person</b>|#name: String<br align="left"/>-age: int<br align="left"/>-weapons: Weapon[]<br align="left"/>|+eat(): void<br align="left"/>+run(): void<br align="left"/>+scream(): void<br align="left"/>}>]
+10 [ label = <{<b>Freedom</b>|-hatesDuty: boolean<br align="left"/>|+laught(): void<br align="left"/>}>]
+11 [ label = <{<b>Weapon</b>|-owner: JPanel<br align="left"/>-shower: JLabel<br align="left"/>-cadence: int<br align="left"/>-wpnname: String<br align="left"/>-bph: float<br align="left"/>-damage: int<br align="left"/>-disponibility: boolean<br align="left"/>-capacity: int<br align="left"/>-biweapon: int<br align="left"/>-recharging: boolean<br align="left"/>-bullets: int<br align="left"/>-type: Type<br align="left"/>+<u>minRad</u>: double<br align="left"/>+<u>maxRad</u>: double<br align="left"/>-sound: String<br align="left"/>-angle: double<br align="left"/>-rechargeTime: int<br align="left"/>|+toString(): String<br align="left"/>+getShower(): JLabel<br align="left"/>+setShower(shower: JLabel): void<br align="left"/>+getRechargeTime(): int<br align="left"/>+setRechargeTime(rechargeTime: int): void<br align="left"/>+isRecharging(): boolean<br align="left"/>+setRecharging(recharging: boolean): void<br align="left"/>+getAngle(): double<br align="left"/>+setAngle(angle: double): void<br align="left"/>+getBiweapon(): int<br align="left"/>+setBiweapon(biweapon: int): void<br align="left"/>+getSound(): String<br align="left"/>+setSound(sound: String): void<br align="left"/>+getOwner(): JPanel<br align="left"/>+setOwner(owner: JPanel): void<br align="left"/>+setBph(bph: float): void<br align="left"/>+getBph(): float<br align="left"/>+getType(): Type<br align="left"/>+setType(type: Type): void<br align="left"/>+changeTo(): void<br align="left"/>+refreshAtts(): void<br align="left"/>+setAttributesTo(label: JLabel): void<br align="left"/>+makeWeapon(type: Type): void<br align="left"/>+refreshAtts(label: JLabel): void<br align="left"/>+isDisponibility(): boolean<br align="left"/>+setDisponibility(disponibility: boolean): void<br align="left"/>+getCadence(): int<br align="left"/>+setCadence(cadence: int): void<br align="left"/>+getWpnname(): String<br align="left"/>+setWpnname(wpnname: String): void<br align="left"/>+getDamage(): int<br align="left"/>+setDamage(damage: int): void<br align="left"/>+getCapacity(): int<br align="left"/>+setCapacity(capacity: int): void<br align="left"/>+getBullets(): int<br align="left"/>+setBullets(bullets: int): void<br align="left"/>+paintComponent(g: Graphics): void<br align="left"/>}>]
+12 [ label = <{&lt;&lt;<i>Shootable</i>&gt;&gt;||+shoot(): void<br align="left"/>+recharge(): void<br align="left"/>}>]
 
-1 -> 5 [style = "dashed" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
+2 -> 7 [style = "solid" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
 
-2 -> 1 [style = "solid" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
+3 -> 9 [style = "solid" arrowhead = "open" arrowtail = "" dir = "forward" taillabel = "0..*" headlabel = "1" label = "controls"]
 
-2 -> 3 [style = "solid" arrowhead = "open" arrowtail = "" dir = "forward" taillabel = "" headlabel = "1" label = ""]
+4 -> 9 [style = "solid" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
 
-2 -> 4 [style = "solid" arrowhead = "open" arrowtail = "" dir = "forward" taillabel = "" headlabel = "1" label = ""]
+5 -> 9 [style = "dashed" arrowhead = "open" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
 
-3 -> 2 [style = "solid" arrowhead = "" arrowtail = "diamond" dir = "back" taillabel = "1" headlabel = "1" label = "has a"]
+6 -> 9 [style = "solid" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
 
-4 -> 2 [style = "solid" arrowhead = "" arrowtail = "odiamond" dir = "back" taillabel = "1" headlabel = "1" label = "has a"]
+7 -> 9 [style = "solid" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+8 -> 5 [style = "solid" arrowhead = "" arrowtail = "diamond" dir = "back" taillabel = "1" headlabel = "0..*" label = "has"]
+
+8 -> 9 [style = "solid" arrowhead = "" arrowtail = "diamond" dir = "back" taillabel = "1" headlabel = "0..*" label = "has"]
+
+9 -> 11 [style = "solid" arrowhead = "open" arrowtail = "" dir = "forward" taillabel = "" headlabel = "0..*" label = ""]
+
+10 -> 7 [style = "solid" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
+
+11 -> 1 [style = "solid" arrowhead = "open" arrowtail = "" dir = "forward" taillabel = "" headlabel = "1" label = ""]
+
+11 -> 12 [style = "dashed" arrowhead = "onormal" arrowtail = "" dir = "forward" taillabel = "" headlabel = "" label = ""]
 
 }
